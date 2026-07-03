@@ -1,7 +1,7 @@
 {
   "name": "not-what-it-seems",
   "productName": "not-what-it-seems",
-  "version": "0.0.5-prealpha",
+  "version": "0.0.6-prealpha",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "private": true,

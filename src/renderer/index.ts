@@ -1,9 +1,26 @@
 import './styles/base.css';
+
 import { startGame } from '../game/bootstrap';
+import { StartupScreen } from './startup/StartupScreen';
 
-void startGame(document.body).catch((error: unknown) => {
-  console.error('Failed to start the game:', error);
+const startupScreen =
+  new StartupScreen(document.body);
 
-  document.body.textContent =
-    'The game failed to start. Check DevTools for details.';
-});
+startupScreen.showLoading();
+
+const launchGame =
+  async (): Promise<void> => {
+    try {
+      await startGame(document.body);
+      startupScreen.destroy();
+    } catch (error: unknown) {
+      console.error(
+        'Failed to start the game:',
+        error,
+      );
+
+      startupScreen.showError(error);
+    }
+  };
+
+void launchGame();
