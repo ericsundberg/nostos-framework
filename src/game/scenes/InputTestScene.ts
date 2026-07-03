@@ -5,54 +5,91 @@ import {
 
 import type { InputManager } from '../../core/input/InputManager';
 import type { Scene } from '../../core/scenes/Scene';
+import type { SettingsManager } from '../../core/settings/SettingsManager';
+import type { GameSettings } from '../settings/GameSettings';
 
 export interface InputTestSceneOptions {
   input: InputManager;
+  settings: SettingsManager<GameSettings>;
   onBack: () => void;
 }
 
 export class InputTestScene implements Scene {
   public readonly view = new Container();
 
-  private readonly content = new Container();
+  private readonly content =
+    new Container();
+
+  private readonly statusText: Text;
 
   private unsubscribeBack:
     (() => void) | null = null;
 
+  private unsubscribeToggle:
+    (() => void) | null = null;
+
+  private unsubscribeSettings:
+    (() => void) | null = null;
+
   public constructor(
-    private readonly options: InputTestSceneOptions,
+    private readonly options:
+      InputTestSceneOptions,
   ) {
     const heading = new Text({
       text: 'Input Service Active',
       style: {
         fill: '#f5f5f5',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily:
+          'Arial, sans-serif',
         fontSize: 40,
         fontWeight: 'bold',
       },
     });
 
     heading.anchor.set(0.5);
-    heading.position.set(0, -40);
+    heading.position.set(0, -80);
 
     const message = new Text({
       text:
-        'The scene transition succeeded.\n' +
+        'Press M to toggle the title marker.\n' +
         'Press Escape to return.',
       style: {
         align: 'center',
         fill: '#b8bec9',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily:
+          'Arial, sans-serif',
         fontSize: 22,
         lineHeight: 32,
       },
     });
 
     message.anchor.set(0.5);
-    message.position.set(0, 40);
+    message.position.set(0, 0);
+
+    this.statusText = new Text({
+      text: '',
+      style: {
+        fill: '#8ecae6',
+        fontFamily:
+          'Arial, sans-serif',
+        fontSize: 22,
+        fontWeight: 'bold',
+      },
+    });
+
+    this.statusText.anchor.set(0.5);
+    this.statusText.position.set(
+      0,
+      88,
+    );
 
     this.content.addChild(heading);
     this.content.addChild(message);
+
+    this.content.addChild(
+      this.statusText,
+    );
+
     this.view.addChild(this.content);
   }
 
@@ -62,11 +99,35 @@ export class InputTestScene implements Scene {
         'ui.back',
         this.options.onBack,
       );
+
+    this.unsubscribeToggle =
+      this.options.input.onPressed(
+        'settings.toggleMarker',
+        () => {
+          void this.toggleMarker();
+        },
+      );
+
+    this.unsubscribeSettings =
+      this.options.settings.subscribe(
+        (settings) => {
+          this.updateStatus(
+            settings
+              .showPipelineMarker,
+          );
+        },
+      );
   }
 
   public exit(): void {
     this.unsubscribeBack?.();
     this.unsubscribeBack = null;
+
+    this.unsubscribeToggle?.();
+    this.unsubscribeToggle = null;
+
+    this.unsubscribeSettings?.();
+    this.unsubscribeSettings = null;
   }
 
   public resize(
@@ -85,5 +146,34 @@ export class InputTestScene implements Scene {
     this.view.destroy({
       children: true,
     });
+  }
+
+  private async toggleMarker():
+    Promise<void> {
+    try {
+      await this.options.settings.update(
+        (current) => ({
+          ...current,
+
+          showPipelineMarker:
+            !current
+              .showPipelineMarker,
+        }),
+      );
+    } catch (error: unknown) {
+      console.error(
+        'Failed to save settings:',
+        error,
+      );
+    }
+  }
+
+  private updateStatus(
+    isVisible: boolean,
+  ): void {
+    this.statusText.text =
+      `Title marker: ${
+        isVisible ? 'ON' : 'OFF'
+      }`;
   }
 }

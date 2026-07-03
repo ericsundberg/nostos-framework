@@ -7,38 +7,49 @@ import {
 
 import type { InputManager } from '../../core/input/InputManager';
 import type { Scene } from '../../core/scenes/Scene';
+import type { SettingsManager } from '../../core/settings/SettingsManager';
+import type { GameSettings } from '../settings/GameSettings';
 
 export interface TitleSceneOptions {
   markerTexture: Texture;
   input: InputManager;
+  settings: SettingsManager<GameSettings>;
   onContinue: () => void;
 }
 
 export class TitleScene implements Scene {
   public readonly view = new Container();
 
-  private readonly content = new Container();
+  private readonly content =
+    new Container();
+
+  private readonly marker: Sprite;
 
   private unsubscribeConfirm:
     (() => void) | null = null;
 
+  private unsubscribeSettings:
+    (() => void) | null = null;
+
   public constructor(
-    private readonly options: TitleSceneOptions,
+    private readonly options:
+      TitleSceneOptions,
   ) {
-    const marker = new Sprite(
+    this.marker = new Sprite(
       options.markerTexture,
     );
 
-    marker.anchor.set(0.5);
-    marker.width = 96;
-    marker.height = 96;
-    marker.position.set(0, -104);
+    this.marker.anchor.set(0.5);
+    this.marker.width = 96;
+    this.marker.height = 96;
+    this.marker.position.set(0, -104);
 
     const title = new Text({
       text: 'Not What It Seems',
       style: {
         fill: '#f5f5f5',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily:
+          'Arial, sans-serif',
         fontSize: 48,
         fontWeight: 'bold',
       },
@@ -51,7 +62,8 @@ export class TitleScene implements Scene {
       text: 'Press Enter or Space',
       style: {
         fill: '#b8bec9',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily:
+          'Arial, sans-serif',
         fontSize: 20,
       },
     });
@@ -59,7 +71,10 @@ export class TitleScene implements Scene {
     prompt.anchor.set(0.5);
     prompt.position.set(0, 72);
 
-    this.content.addChild(marker);
+    this.content.addChild(
+      this.marker,
+    );
+
     this.content.addChild(title);
     this.content.addChild(prompt);
     this.view.addChild(this.content);
@@ -71,11 +86,23 @@ export class TitleScene implements Scene {
         'ui.confirm',
         this.options.onContinue,
       );
+
+    this.unsubscribeSettings =
+      this.options.settings.subscribe(
+        (settings) => {
+          this.marker.visible =
+            settings
+              .showPipelineMarker;
+        },
+      );
   }
 
   public exit(): void {
     this.unsubscribeConfirm?.();
     this.unsubscribeConfirm = null;
+
+    this.unsubscribeSettings?.();
+    this.unsubscribeSettings = null;
   }
 
   public resize(

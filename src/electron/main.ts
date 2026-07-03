@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { registerAssetProtocol, registerAssetScheme } from './assets';
+import { registerSettingsIpc } from './settings';
 
 registerAssetScheme();
 
@@ -47,6 +48,7 @@ const createWindow = (): void => {
 
 void app.whenReady().then(() => {
   registerAssetProtocol();
+  registerSettingsIpc();
   createWindow();
 
   app.on('activate', () => {
