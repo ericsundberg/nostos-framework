@@ -1,4 +1,4 @@
-import { InputTestScene } from '../scenes/InputTestScene';
+import { GameplayScene } from '../scenes/GameplayScene';
 import { TitleScene } from '../scenes/TitleScene';
 import type { GameServices } from '../services/GameServices';
 
@@ -31,15 +31,19 @@ export class GameRouter {
             this.services.settings,
 
           onContinue:
-            this.showInputTestScene,
+            this.showGameplayScene,
         }),
       );
     };
 
-  private readonly showInputTestScene =
+  private readonly showGameplayScene =
     (): void => {
       this.services.scenes.show(
-        new InputTestScene({
+        new GameplayScene({
+          data:
+            this.services.data
+              .gameplay,
+
           input:
             this.services.input,
 

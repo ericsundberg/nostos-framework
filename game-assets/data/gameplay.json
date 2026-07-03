@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "playfield": {
+    "width": 640,
+    "height": 360,
+    "padding": 24,
+    "backgroundColor": "#171b22",
+    "borderColor": "#3a4353"
+  },
+  "player": {
+    "size": 28,
+    "speed": 240,
+    "color": "#8ecae6"
+  },
+  "text": {
+    "instructions": "Move with WASD or the arrow keys. Press M to toggle the title marker. Press Escape to return."
+  }
+}

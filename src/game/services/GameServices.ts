@@ -6,6 +6,7 @@ import type {
 import { InputManager } from '../../core/input/InputManager';
 import { SceneManager } from '../../core/scenes/SceneManager';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
+import type { GameplayData } from '../data/GameplayData';
 import type { TitleScreenData } from '../data/TitleScreenData';
 import type { GameSettings } from '../settings/GameSettings';
 
@@ -14,13 +15,15 @@ export interface GameAssets {
 }
 
 export interface GameData {
+  gameplay: GameplayData;
   titleScreen: TitleScreenData;
 }
 
 export interface GameServicesOptions {
   app: Application;
   host: HTMLElement;
-  settings: SettingsManager<GameSettings>;
+  settings:
+    SettingsManager<GameSettings>;
   assets: GameAssets;
   data: GameData;
 }
