@@ -1,12 +1,26 @@
-import { contextBridge } from 'electron';
+import {
+  contextBridge,
+  ipcRenderer,
+} from 'electron';
 
 import type { GamePlatform } from '../shared/platform';
 
-const ASSET_BASE_URL = 'game-asset://assets/';
+const ASSET_BASE_URL =
+  'game-asset://assets/';
 
-const createAssetUrl = (relativePath: string): string => {
+const LOAD_SETTINGS_CHANNEL =
+  'settings:load';
+
+const SAVE_SETTINGS_CHANNEL =
+  'settings:save';
+
+const createAssetUrl = (
+  relativePath: string,
+): string => {
   if (typeof relativePath !== 'string') {
-    throw new TypeError('Asset path must be a string.');
+    throw new TypeError(
+      'Asset path must be a string.',
+    );
   }
 
   const segments = relativePath
@@ -22,11 +36,16 @@ const createAssetUrl = (relativePath: string): string => {
   );
 
   if (isInvalid) {
-    throw new Error(`Invalid asset path: ${relativePath}`);
+    throw new Error(
+      `Invalid asset path: ${relativePath}`,
+    );
   }
 
   const encodedPath = segments
-    .map((segment) => encodeURIComponent(segment))
+    .map(
+      (segment) =>
+        encodeURIComponent(segment),
+    )
     .join('/');
 
   return `${ASSET_BASE_URL}${encodedPath}`;
@@ -36,6 +55,25 @@ const gamePlatform: GamePlatform = {
   assets: {
     url: createAssetUrl,
   },
+
+  settings: {
+    load: (): Promise<unknown> =>
+      ipcRenderer.invoke(
+        LOAD_SETTINGS_CHANNEL,
+      ),
+
+    save: async (
+      settings: Record<string, unknown>,
+    ): Promise<void> => {
+      await ipcRenderer.invoke(
+        SAVE_SETTINGS_CHANNEL,
+        settings,
+      );
+    },
+  },
 };
 
-contextBridge.exposeInMainWorld('gamePlatform', gamePlatform);
+contextBridge.exposeInMainWorld(
+  'gamePlatform',
+  gamePlatform,
+);
