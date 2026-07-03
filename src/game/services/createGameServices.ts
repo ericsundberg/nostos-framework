@@ -9,6 +9,10 @@ import { loadAssetManifest } from '../../core/assets/loadAssetManifest';
 import { loadJsonAsset } from '../../core/data/loadJsonAsset';
 import { SettingsManager } from '../../core/settings/SettingsManager';
 import {
+  isGameplayData,
+  type GameplayData,
+} from '../data/GameplayData';
+import {
   isTitleScreenData,
   type TitleScreenData,
 } from '../data/TitleScreenData';
@@ -64,6 +68,21 @@ export const createGameServices =
 
     console.info(
       'Loaded validated title-screen data.',
+    );
+
+    const gameplay =
+      await loadJsonAsset<GameplayData>({
+        relativePath:
+          'data/gameplay.json',
+
+        resolveAssetUrl,
+
+        validate:
+          isGameplayData,
+      });
+
+    console.info(
+      'Loaded validated gameplay data.',
     );
 
     const manifest =
@@ -123,6 +142,7 @@ export const createGameServices =
         },
 
         data: {
+          gameplay,
           titleScreen,
         },
       });
@@ -140,6 +160,26 @@ export const createGameServices =
     services.input.bindAction(
       'settings.toggleMarker',
       ['KeyM'],
+    );
+
+    services.input.bindAction(
+      'movement.left',
+      ['KeyA', 'ArrowLeft'],
+    );
+
+    services.input.bindAction(
+      'movement.right',
+      ['KeyD', 'ArrowRight'],
+    );
+
+    services.input.bindAction(
+      'movement.up',
+      ['KeyW', 'ArrowUp'],
+    );
+
+    services.input.bindAction(
+      'movement.down',
+      ['KeyS', 'ArrowDown'],
     );
 
     return services;

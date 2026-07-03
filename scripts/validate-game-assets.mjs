@@ -359,10 +359,121 @@ const validateTitleScreenData = (
   return problems;
 };
 
+
+const validateGameplayData = (
+  value,
+) => {
+  const problems = [];
+
+  if (
+    !isRecord(value) ||
+    value.schemaVersion !== 1
+  ) {
+    return [
+      'expected schemaVersion 1.',
+    ];
+  }
+
+  const {
+    playfield,
+    player,
+    text,
+  } = value;
+
+  let validPlayfield = false;
+  let validPlayer = false;
+
+  if (isRecord(playfield)) {
+    const {
+      width,
+      height,
+      padding,
+      backgroundColor,
+      borderColor,
+    } = playfield;
+
+    validPlayfield =
+      isPositiveNumber(width) &&
+      isPositiveNumber(height) &&
+      isFiniteNumber(padding) &&
+      padding >= 0 &&
+      isNonEmptyString(
+        backgroundColor,
+      ) &&
+      isNonEmptyString(borderColor);
+
+    if (!validPlayfield) {
+      problems.push(
+        'playfield values are missing or invalid.',
+      );
+    }
+  } else {
+    problems.push(
+      'playfield values are missing or invalid.',
+    );
+  }
+
+  if (isRecord(player)) {
+    validPlayer =
+      isPositiveNumber(player.size) &&
+      isPositiveNumber(player.speed) &&
+      isNonEmptyString(player.color);
+
+    if (!validPlayer) {
+      problems.push(
+        'player values are missing or invalid.',
+      );
+    }
+  } else {
+    problems.push(
+      'player values are missing or invalid.',
+    );
+  }
+
+  if (
+    !isRecord(text) ||
+    !isNonEmptyString(
+      text.instructions,
+    )
+  ) {
+    problems.push(
+      'text.instructions must be a non-empty string.',
+    );
+  }
+
+  if (
+    validPlayfield &&
+    validPlayer
+  ) {
+    const usableWidth =
+      playfield.width -
+      playfield.padding * 2;
+
+    const usableHeight =
+      playfield.height -
+      playfield.padding * 2;
+
+    if (
+      usableWidth <= player.size ||
+      usableHeight <= player.size
+    ) {
+      problems.push(
+        'playfield must contain usable movement space.',
+      );
+    }
+  }
+
+  return problems;
+};
+
 const dataValidators = new Map([
   [
     'data/title-screen.json',
     validateTitleScreenData,
+  ],
+  [
+    'data/gameplay.json',
+    validateGameplayData,
   ],
 ]);
 
