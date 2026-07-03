@@ -1,0 +1,25 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="160"
+  height="160"
+  viewBox="0 0 160 160"
+>
+  <circle
+    cx="80"
+    cy="80"
+    r="72"
+    fill="#202631"
+    stroke="#f5f5f5"
+    stroke-width="8"
+  />
+  <path
+    d="M80 28 L132 80 L80 132 L28 80 Z"
+    fill="#8ecae6"
+  />
+  <circle
+    cx="80"
+    cy="80"
+    r="22"
+    fill="#111318"
+  />
+</svg>
