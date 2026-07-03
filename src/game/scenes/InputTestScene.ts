@@ -1,81 +1,72 @@
 import {
   Container,
-  Sprite,
   Text,
-  Texture,
 } from 'pixi.js';
 
 import type { InputManager } from '../../core/input/InputManager';
 import type { Scene } from '../../core/scenes/Scene';
 
-export interface TitleSceneOptions {
-  markerTexture: Texture;
+export interface InputTestSceneOptions {
   input: InputManager;
-  onContinue: () => void;
+  onBack: () => void;
 }
 
-export class TitleScene implements Scene {
+export class InputTestScene implements Scene {
   public readonly view = new Container();
 
   private readonly content = new Container();
 
-  private unsubscribeConfirm:
+  private unsubscribeBack:
     (() => void) | null = null;
 
   public constructor(
-    private readonly options: TitleSceneOptions,
+    private readonly options: InputTestSceneOptions,
   ) {
-    const marker = new Sprite(
-      options.markerTexture,
-    );
-
-    marker.anchor.set(0.5);
-    marker.width = 96;
-    marker.height = 96;
-    marker.position.set(0, -104);
-
-    const title = new Text({
-      text: 'Not What It Seems',
+    const heading = new Text({
+      text: 'Input Service Active',
       style: {
         fill: '#f5f5f5',
         fontFamily: 'Arial, sans-serif',
-        fontSize: 48,
+        fontSize: 40,
         fontWeight: 'bold',
       },
     });
 
-    title.anchor.set(0.5);
-    title.position.set(0, 8);
+    heading.anchor.set(0.5);
+    heading.position.set(0, -40);
 
-    const prompt = new Text({
-      text: 'Press Enter or Space',
+    const message = new Text({
+      text:
+        'The scene transition succeeded.\n' +
+        'Press Escape to return.',
       style: {
+        align: 'center',
         fill: '#b8bec9',
         fontFamily: 'Arial, sans-serif',
-        fontSize: 20,
+        fontSize: 22,
+        lineHeight: 32,
       },
     });
 
-    prompt.anchor.set(0.5);
-    prompt.position.set(0, 72);
+    message.anchor.set(0.5);
+    message.position.set(0, 40);
 
-    this.content.addChild(marker);
-    this.content.addChild(title);
-    this.content.addChild(prompt);
+    this.content.addChild(heading);
+    this.content.addChild(message);
     this.view.addChild(this.content);
   }
 
   public enter(): void {
-    this.unsubscribeConfirm =
+    this.unsubscribeBack =
       this.options.input.onPressed(
-        'ui.confirm',
-        this.options.onContinue,
+        'ui.back',
+        this.options.onBack,
       );
   }
 
   public exit(): void {
-    this.unsubscribeConfirm?.();
-    this.unsubscribeConfirm = null;
+    this.unsubscribeBack?.();
+    this.unsubscribeBack = null;
   }
 
   public resize(
