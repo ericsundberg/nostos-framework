@@ -1,0 +1,74 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-verification:
+    name: Linux verification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    env:
+      CI: true
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.16.0
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Lint TypeScript
+        run: npm run lint
+
+      - name: Run framework tests
+        run: npm test
+
+      - name: Validate public assets
+        run: npm run validate:assets
+
+      - name: Package Linux application
+        run: ./node_modules/.bin/electron-forge package
+
+      - name: Verify packaged application
+        run: |
+          test -x out/not-what-it-seems-linux-x64/not-what-it-seems
+          test -f out/not-what-it-seems-linux-x64/resources/game-assets/manifest.json
+          test -f out/not-what-it-seems-linux-x64/resources/game-assets/data/title-screen.json
+
+      - name: Archive Linux package
+        run: |
+          tar -czf not-what-it-seems-linux-x64.tar.gz \
+            -C out \
+            not-what-it-seems-linux-x64
+
+      - name: Upload Linux package
+        uses: actions/upload-artifact@v7
+        with:
+          name: not-what-it-seems-linux-x64
+          path: not-what-it-seems-linux-x64.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
