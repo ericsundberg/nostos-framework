@@ -3,7 +3,12 @@
   "bundles": [
     {
       "name": "startup",
-      "assets": []
+      "assets": [
+        {
+          "alias": "ui.pipeline-marker",
+          "src": "images/pipeline-marker.svg"
+        }
+      ]
     }
   ]
 }
