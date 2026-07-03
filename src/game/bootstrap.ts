@@ -6,15 +6,20 @@ import {
 import { createGameApplication } from '../core/application/createGameApplication';
 import { initializeAssetBundles } from '../core/assets/initializeAssetBundles';
 import { loadAssetManifest } from '../core/assets/loadAssetManifest';
+import { loadJsonAsset } from '../core/data/loadJsonAsset';
 import { InputManager } from '../core/input/InputManager';
 import { SceneManager } from '../core/scenes/SceneManager';
 import { SettingsManager } from '../core/settings/SettingsManager';
 import {
+  isTitleScreenData,
+  type TitleScreenData,
+} from './data/TitleScreenData';
+import { InputTestScene } from './scenes/InputTestScene';
+import { TitleScene } from './scenes/TitleScene';
+import {
   type GameSettings,
   normalizeGameSettings,
 } from './settings/GameSettings';
-import { InputTestScene } from './scenes/InputTestScene';
-import { TitleScene } from './scenes/TitleScene';
 
 export async function startGame(
   host: HTMLElement,
@@ -46,6 +51,21 @@ export async function startGame(
 
   console.info(
     'Loaded persistent game settings.',
+  );
+
+  const titleScreenData =
+    await loadJsonAsset<TitleScreenData>({
+      relativePath:
+        'data/title-screen.json',
+
+      resolveAssetUrl,
+
+      validate:
+        isTitleScreenData,
+    });
+
+  console.info(
+    'Loaded validated title-screen data.',
   );
 
   const manifest =
@@ -120,8 +140,10 @@ export async function startGame(
     sceneManager.show(
       new TitleScene({
         markerTexture,
+        data: titleScreenData,
         input,
         settings,
+
         onContinue:
           showInputTestScene,
       }),

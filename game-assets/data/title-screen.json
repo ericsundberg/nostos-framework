@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "text": {
+    "title": "Not What It Seems",
+    "prompt": "Press Enter or Space (loaded from JSON)"
+  },
+  "layout": {
+    "markerSize": 96,
+    "markerY": -104,
+    "titleY": 8,
+    "promptY": 72
+  },
+  "style": {
+    "titleColor": "#f5f5f5",
+    "promptColor": "#b8bec9",
+    "titleFontSize": 48,
+    "promptFontSize": 20
+  }
+}

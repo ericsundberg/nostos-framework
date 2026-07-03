@@ -8,17 +8,20 @@ import {
 import type { InputManager } from '../../core/input/InputManager';
 import type { Scene } from '../../core/scenes/Scene';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
+import type { TitleScreenData } from '../data/TitleScreenData';
 import type { GameSettings } from '../settings/GameSettings';
 
 export interface TitleSceneOptions {
   markerTexture: Texture;
+  data: TitleScreenData;
   input: InputManager;
   settings: SettingsManager<GameSettings>;
   onContinue: () => void;
 }
 
 export class TitleScene implements Scene {
-  public readonly view = new Container();
+  public readonly view =
+    new Container();
 
   private readonly content =
     new Container();
@@ -35,41 +38,70 @@ export class TitleScene implements Scene {
     private readonly options:
       TitleSceneOptions,
   ) {
+    const { data } = options;
+
     this.marker = new Sprite(
       options.markerTexture,
     );
 
     this.marker.anchor.set(0.5);
-    this.marker.width = 96;
-    this.marker.height = 96;
-    this.marker.position.set(0, -104);
+
+    this.marker.width =
+      data.layout.markerSize;
+
+    this.marker.height =
+      data.layout.markerSize;
+
+    this.marker.position.set(
+      0,
+      data.layout.markerY,
+    );
 
     const title = new Text({
-      text: 'Not What It Seems',
+      text: data.text.title,
+
       style: {
-        fill: '#f5f5f5',
+        fill:
+          data.style.titleColor,
+
         fontFamily:
           'Arial, sans-serif',
-        fontSize: 48,
+
+        fontSize:
+          data.style.titleFontSize,
+
         fontWeight: 'bold',
       },
     });
 
     title.anchor.set(0.5);
-    title.position.set(0, 8);
+
+    title.position.set(
+      0,
+      data.layout.titleY,
+    );
 
     const prompt = new Text({
-      text: 'Press Enter or Space',
+      text: data.text.prompt,
+
       style: {
-        fill: '#b8bec9',
+        fill:
+          data.style.promptColor,
+
         fontFamily:
           'Arial, sans-serif',
-        fontSize: 20,
+
+        fontSize:
+          data.style.promptFontSize,
       },
     });
 
     prompt.anchor.set(0.5);
-    prompt.position.set(0, 72);
+
+    prompt.position.set(
+      0,
+      data.layout.promptY,
+    );
 
     this.content.addChild(
       this.marker,
