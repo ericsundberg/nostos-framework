@@ -6,13 +6,20 @@ import {
 import { createGameApplication } from '../core/application/createGameApplication';
 import { initializeAssetBundles } from '../core/assets/initializeAssetBundles';
 import { loadAssetManifest } from '../core/assets/loadAssetManifest';
-import { createTitleScene } from './scenes/createTitleScene';
+import { SceneManager } from '../core/scenes/SceneManager';
+import { TitleScene } from './scenes/TitleScene';
 
-export async function startGame(host: HTMLElement): Promise<void> {
-  const resolveAssetUrl = (relativePath: string): string =>
+export async function startGame(
+  host: HTMLElement,
+): Promise<void> {
+  const resolveAssetUrl = (
+    relativePath: string,
+  ): string =>
     window.gamePlatform.assets.url(relativePath);
 
-  const manifest = await loadAssetManifest(resolveAssetUrl);
+  const manifest = await loadAssetManifest(
+    resolveAssetUrl,
+  );
 
   await initializeAssetBundles(
     manifest,
@@ -35,7 +42,9 @@ export async function startGame(host: HTMLElement): Promise<void> {
     `Loaded asset manifest schema ${manifest.schemaVersion}.`,
   );
 
-  console.info('Loaded PixiJS startup asset bundle.');
+  console.info(
+    'Loaded PixiJS startup asset bundle.',
+  );
 
   const app = await createGameApplication({
     background: '#111318',
@@ -45,19 +54,11 @@ export async function startGame(host: HTMLElement): Promise<void> {
 
   host.appendChild(app.canvas);
 
-  const titleScene = createTitleScene({
-    markerTexture,
-  });
+  const sceneManager = new SceneManager(app);
 
-  app.stage.addChild(titleScene);
-
-  const layoutTitleScene = (): void => {
-    titleScene.position.set(
-      app.screen.width / 2,
-      app.screen.height / 2,
-    );
-  };
-
-  layoutTitleScene();
-  window.addEventListener('resize', layoutTitleScene);
+  sceneManager.show(
+    new TitleScene({
+      markerTexture,
+    }),
+  );
 }
