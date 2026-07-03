@@ -1,6 +1,9 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import { registerAssetProtocol, registerAssetScheme } from './assets';
+
+registerAssetScheme();
 
 if (started) {
   app.quit();
@@ -43,6 +46,7 @@ const createWindow = (): void => {
 };
 
 void app.whenReady().then(() => {
+  registerAssetProtocol();
   createWindow();
 
   app.on('activate', () => {

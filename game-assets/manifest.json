@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
-  "bundles": {
-    "startup": []
-  }
+  "bundles": [
+    {
+      "name": "startup",
+      "assets": []
+    }
+  ]
 }
