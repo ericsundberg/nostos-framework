@@ -6,7 +6,9 @@ import {
 import { createGameApplication } from '../core/application/createGameApplication';
 import { initializeAssetBundles } from '../core/assets/initializeAssetBundles';
 import { loadAssetManifest } from '../core/assets/loadAssetManifest';
+import { InputManager } from '../core/input/InputManager';
 import { SceneManager } from '../core/scenes/SceneManager';
+import { InputTestScene } from './scenes/InputTestScene';
 import { TitleScene } from './scenes/TitleScene';
 
 export async function startGame(
@@ -54,11 +56,49 @@ export async function startGame(
 
   host.appendChild(app.canvas);
 
+  const input = new InputManager();
+
+  input.bindAction(
+    'ui.confirm',
+    ['Enter', 'Space'],
+  );
+
+  input.bindAction(
+    'ui.back',
+    ['Escape'],
+  );
+
   const sceneManager = new SceneManager(app);
 
-  sceneManager.show(
-    new TitleScene({
-      markerTexture,
-    }),
+  function showTitleScene(): void {
+    sceneManager.show(
+      new TitleScene({
+        markerTexture,
+        input,
+        onContinue: showInputTestScene,
+      }),
+    );
+  }
+
+  function showInputTestScene(): void {
+    sceneManager.show(
+      new InputTestScene({
+        input,
+        onBack: showTitleScene,
+      }),
+    );
+  }
+
+  showTitleScene();
+
+  window.addEventListener(
+    'beforeunload',
+    () => {
+      sceneManager.destroy();
+      input.destroy();
+    },
+    {
+      once: true,
+    },
   );
 }
