@@ -1,16 +1,22 @@
-import { Container } from 'pixi.js';
+import {
+  Container,
+  Text,
+} from 'pixi.js';
 
 import type { InputManager } from '../../core/input/InputManager';
+import type { LocalizationService } from '../localization/LocalizationService';
 import type { MenuPanel } from './MenuPanel';
 import { MenuButton } from './MenuButton';
 
 interface MenuItem {
+  key: string;
   button: MenuButton;
   visible: boolean;
 }
 
 export interface MainMenuPanelOptions {
   input: InputManager;
+  localization: LocalizationService;
   canContinue: boolean;
   onNewGame: () => void;
   onContinue: () => void;
@@ -25,6 +31,9 @@ export class MainMenuPanel implements MenuPanel {
 
   private readonly items:
     MenuItem[];
+
+  private readonly descriptionText:
+    Text;
 
   private selectedIndex = 0;
 
@@ -41,52 +50,59 @@ export class MainMenuPanel implements MenuPanel {
     private readonly options:
       MainMenuPanelOptions,
   ) {
-    this.items = [
-      {
-        visible: true,
-        button: new MenuButton({
-          label: 'New Game',
-          onActivate:
-            options.onNewGame,
-        }),
-      },
+    this.descriptionText =
+      new Text({
+        text: '',
+        style: {
+          align: 'center',
+          fill: '#8ecae6',
+          fontFamily:
+            'Arial, sans-serif',
+          fontSize: 15,
+          lineHeight: 22,
+          wordWrap: true,
+          wordWrapWidth: 560,
+        },
+      });
 
-      {
+    this.descriptionText.anchor.set(0.5);
+
+    this.items = [
+      this.createItem({
+        key: 'new_game',
+        visible: true,
+        onActivate:
+          options.onNewGame,
+      }),
+
+      this.createItem({
+        key: 'continue_game',
         visible:
           options.canContinue,
-        button: new MenuButton({
-          label: 'Continue',
-          onActivate:
-            options.onContinue,
-        }),
-      },
+        onActivate:
+          options.onContinue,
+      }),
 
-      {
+      this.createItem({
+        key: 'load_game',
         visible: true,
-        button: new MenuButton({
-          label: 'Load Game',
-          onActivate:
-            options.onLoadGame,
-        }),
-      },
+        onActivate:
+          options.onLoadGame,
+      }),
 
-      {
+      this.createItem({
+        key: 'settings',
         visible: true,
-        button: new MenuButton({
-          label: 'Settings',
-          onActivate:
-            options.onSettings,
-        }),
-      },
+        onActivate:
+          options.onSettings,
+      }),
 
-      {
+      this.createItem({
+        key: 'quit_game',
         visible: true,
-        button: new MenuButton({
-          label: 'Quit Game',
-          onActivate:
-            options.onQuit,
-        }),
-      },
+        onActivate:
+          options.onQuit,
+      }),
     ];
 
     this.layoutButtons();
@@ -98,6 +114,10 @@ export class MainMenuPanel implements MenuPanel {
         );
       }
     }
+
+    this.view.addChild(
+      this.descriptionText,
+    );
 
     this.updateSelection();
   }
@@ -149,6 +169,27 @@ export class MainMenuPanel implements MenuPanel {
     }
   }
 
+  private createItem(
+    options: {
+      key: string;
+      visible: boolean;
+      onActivate: () => void;
+    },
+  ): MenuItem {
+    return {
+      key: options.key,
+      visible: options.visible,
+      button: new MenuButton({
+        id: options.key,
+        label:
+          this.options.localization
+            .text(options.key),
+        onActivate:
+          options.onActivate,
+      }),
+    };
+  }
+
   private layoutButtons(): void {
     const visibleItems =
       this.getVisibleItems();
@@ -160,6 +201,11 @@ export class MainMenuPanel implements MenuPanel {
           index * 62,
         );
       },
+    );
+
+    this.descriptionText.position.set(
+      0,
+      visibleItems.length * 62 + 30,
     );
   }
 
@@ -190,6 +236,18 @@ export class MainMenuPanel implements MenuPanel {
         );
       },
     );
+
+    const selectedItem =
+      visibleItems[this.selectedIndex];
+
+    if (selectedItem === undefined) {
+      this.descriptionText.text = '';
+      return;
+    }
+
+    this.descriptionText.text =
+      this.options.localization
+        .description(selectedItem.key);
   }
 
   private getVisibleItems():

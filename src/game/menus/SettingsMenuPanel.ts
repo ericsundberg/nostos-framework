@@ -5,12 +5,14 @@ import {
 
 import type { InputManager } from '../../core/input/InputManager';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
+import type { LocalizationService } from '../localization/LocalizationService';
 import type { GameSettings } from '../settings/GameSettings';
 import type { MenuPanel } from './MenuPanel';
 import { MenuButton } from './MenuButton';
 
 export interface SettingsMenuPanelOptions {
   input: InputManager;
+  localization: LocalizationService;
   settings: SettingsManager<GameSettings>;
   onBack: () => void;
 }
@@ -30,6 +32,9 @@ export class SettingsMenuPanel implements MenuPanel {
 
   private readonly buttons:
     MenuButton[];
+
+  private readonly descriptionText:
+    Text;
 
   private selectedIndex = 0;
 
@@ -54,7 +59,10 @@ export class SettingsMenuPanel implements MenuPanel {
   ) {
     const heading =
       new Text({
-        text: 'Settings',
+        text:
+          options.localization.text(
+            'settings',
+          ),
         style: {
           align: 'center',
           fill: '#f5f5f5',
@@ -70,7 +78,8 @@ export class SettingsMenuPanel implements MenuPanel {
 
     this.markerButton =
       new MenuButton({
-        label: 'Pipeline Marker: On',
+        id: 'pipeline_marker',
+        label: '',
         onActivate: () => {
           void this.toggleSetting(
             'showPipelineMarker',
@@ -80,7 +89,8 @@ export class SettingsMenuPanel implements MenuPanel {
 
     this.launchButton =
       new MenuButton({
-        label: 'Launch Screen: On',
+        id: 'launch_screen',
+        label: '',
         onActivate: () => {
           void this.toggleSetting(
             'showLaunchScreen',
@@ -90,10 +100,31 @@ export class SettingsMenuPanel implements MenuPanel {
 
     this.backButton =
       new MenuButton({
-        label: 'Back',
+        id: 'back',
+        label:
+          options.localization.text(
+            'back',
+          ),
         onActivate:
           options.onBack,
       });
+
+    this.descriptionText =
+      new Text({
+        text: '',
+        style: {
+          align: 'center',
+          fill: '#8ecae6',
+          fontFamily:
+            'Arial, sans-serif',
+          fontSize: 15,
+          lineHeight: 22,
+          wordWrap: true,
+          wordWrapWidth: 560,
+        },
+      });
+
+    this.descriptionText.anchor.set(0.5);
 
     this.buttons = [
       this.markerButton,
@@ -114,7 +145,20 @@ export class SettingsMenuPanel implements MenuPanel {
       },
     );
 
+    this.descriptionText.position.set(
+      0,
+      this.buttons.length * 62 + 30,
+    );
+
     this.view.addChild(heading);
+
+    this.view.addChild(
+      this.descriptionText,
+    );
+
+    this.updateLabels(
+      options.settings.getAll(),
+    );
 
     this.updateSelection();
   }
@@ -208,24 +252,43 @@ export class SettingsMenuPanel implements MenuPanel {
         );
       },
     );
+
+    const selectedButton =
+      this.buttons[this.selectedIndex];
+
+    this.descriptionText.text =
+      selectedButton === undefined
+        ? ''
+        : this.options.localization
+          .description(
+            selectedButton.id,
+          );
   }
 
   private updateLabels(
     settings: Readonly<GameSettings>,
   ): void {
     this.markerButton.setLabel(
-      `Pipeline Marker: ${
-        settings.showPipelineMarker
-          ? 'On'
-          : 'Off'
+      `${this.options.localization.text(
+        'pipeline_marker',
+      )}: ${
+        this.options.localization.text(
+          settings.showPipelineMarker
+            ? 'on'
+            : 'off',
+        )
       }`,
     );
 
     this.launchButton.setLabel(
-      `Launch Screen: ${
-        settings.showLaunchScreen
-          ? 'On'
-          : 'Off'
+      `${this.options.localization.text(
+        'launch_screen',
+      )}: ${
+        this.options.localization.text(
+          settings.showLaunchScreen
+            ? 'on'
+            : 'off',
+        )
       }`,
     );
   }

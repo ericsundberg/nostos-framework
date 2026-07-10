@@ -5,12 +5,15 @@ import {
 } from 'pixi.js';
 
 export interface MenuButtonOptions {
+  id: string;
   label: string;
   enabled?: boolean;
   onActivate: () => void;
 }
 
 export class MenuButton {
+  public readonly id: string;
+
   public readonly view =
     new Container();
 
@@ -27,6 +30,14 @@ export class MenuButton {
     private readonly options:
       MenuButtonOptions,
   ) {
+    if (options.id.trim().length === 0) {
+      throw new Error(
+        'Menu button IDs cannot be empty.',
+      );
+    }
+
+    this.id = options.id;
+
     this.isEnabled =
       options.enabled ?? true;
 

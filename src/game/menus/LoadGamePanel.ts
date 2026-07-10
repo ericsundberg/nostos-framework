@@ -4,11 +4,13 @@ import {
 } from 'pixi.js';
 
 import type { InputManager } from '../../core/input/InputManager';
+import type { LocalizationService } from '../localization/LocalizationService';
 import type { MenuPanel } from './MenuPanel';
 import { MenuButton } from './MenuButton';
 
 export interface LoadGamePanelOptions {
   input: InputManager;
+  localization: LocalizationService;
   onBack: () => void;
 }
 
@@ -31,7 +33,10 @@ export class LoadGamePanel implements MenuPanel {
   ) {
     const heading =
       new Text({
-        text: 'Load Game',
+        text:
+          options.localization.text(
+            'load_game',
+          ),
         style: {
           align: 'center',
           fill: '#f5f5f5',
@@ -47,7 +52,10 @@ export class LoadGamePanel implements MenuPanel {
 
     const message =
       new Text({
-        text: 'No save files found.',
+        text:
+          options.localization.text(
+            'no_save_files_found',
+          ),
         style: {
           align: 'center',
           fill: '#b8bec9',
@@ -62,7 +70,11 @@ export class LoadGamePanel implements MenuPanel {
 
     this.backButton =
       new MenuButton({
-        label: 'Back',
+        id: 'back',
+        label:
+          options.localization.text(
+            'back',
+          ),
         onActivate:
           options.onBack,
       });

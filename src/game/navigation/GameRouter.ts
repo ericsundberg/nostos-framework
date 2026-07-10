@@ -69,6 +69,10 @@ export class GameRouter {
           input:
             this.services.input,
 
+          localization:
+            this.services
+              .getLocalization(),
+
           settings:
             this.services.settings,
 

@@ -9,6 +9,7 @@ import type { InputManager } from '../../core/input/InputManager';
 import type { Scene } from '../../core/scenes/Scene';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
 import type { TitleScreenData } from '../data/TitleScreenData';
+import type { LocalizationService } from '../localization/LocalizationService';
 import { LoadGamePanel } from '../menus/LoadGamePanel';
 import { MainMenuPanel } from '../menus/MainMenuPanel';
 import type { MenuPanel } from '../menus/MenuPanel';
@@ -19,6 +20,7 @@ export interface TitleSceneOptions {
   markerTexture: Texture;
   data: TitleScreenData;
   input: InputManager;
+  localization: LocalizationService;
   settings: SettingsManager<GameSettings>;
   canContinue: boolean;
   onNewGame: () => void;
@@ -68,7 +70,11 @@ export class TitleScene implements Scene {
     );
 
     const title = new Text({
-      text: data.text.title,
+      text:
+        options.localization.text(
+          'game_title',
+          data.text.title,
+        ),
 
       style: {
         fill:
@@ -159,6 +165,9 @@ export class TitleScene implements Scene {
           input:
             this.options.input,
 
+          localization:
+            this.options.localization,
+
           canContinue:
             this.options.canContinue,
 
@@ -187,6 +196,9 @@ export class TitleScene implements Scene {
           input:
             this.options.input,
 
+          localization:
+            this.options.localization,
+
           onBack:
             this.showMainMenu,
         }),
@@ -199,6 +211,9 @@ export class TitleScene implements Scene {
         new SettingsMenuPanel({
           input:
             this.options.input,
+
+          localization:
+            this.options.localization,
 
           settings:
             this.options.settings,

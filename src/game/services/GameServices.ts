@@ -4,6 +4,7 @@ import { InputManager } from '../../core/input/InputManager';
 import { SceneManager } from '../../core/scenes/SceneManager';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
 import type { GameContent } from '../content/GameContent';
+import { LocalizationService } from '../localization/LocalizationService';
 import { MusicDirector } from '../music/MusicDirector';
 import type { GameSettings } from '../settings/GameSettings';
 import type { MusicService } from './MusicService';
@@ -44,6 +45,9 @@ export class GameServices {
   private content:
     GameContent | null = null;
 
+  private localization:
+    LocalizationService | null = null;
+
   private musicDirector:
     MusicDirector | null = null;
 
@@ -75,6 +79,11 @@ export class GameServices {
   ): void {
     this.content = content;
 
+    this.localization =
+      new LocalizationService(
+        content.data.localization,
+      );
+
     this.musicDirector =
       new MusicDirector({
         data:
@@ -96,6 +105,17 @@ export class GameServices {
     }
 
     return this.content;
+  }
+
+  public getLocalization():
+    LocalizationService {
+    if (this.localization === null) {
+      throw new Error(
+        'Localization service has not been initialized.',
+      );
+    }
+
+    return this.localization;
   }
 
   public getMusicDirector():

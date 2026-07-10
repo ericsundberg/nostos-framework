@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "locale": "en",
+  "strings": {
+    "game_title": "Not What It Seems",
+    "new_game": "New Game",
+    "continue_game": "Continue",
+    "load_game": "Load Game",
+    "settings": "Settings",
+    "quit_game": "Quit Game",
+    "back": "Back",
+    "no_save_files_found": "No save files found.",
+    "pipeline_marker": "Pipeline Marker",
+    "launch_screen": "Launch Screen",
+    "on": "On",
+    "off": "Off"
+  },
+  "descriptions": {
+    "new_game": "Start a fresh template gameplay session. Developer key: new_game.",
+    "continue_game": "Continue from the newest valid save file. Hidden until a save system exists. Developer key: continue_game.",
+    "load_game": "Open the load-game panel inside the persistent title scene. Developer key: load_game.",
+    "settings": "Open the settings panel while keeping the title scene active. Developer key: settings.",
+    "quit_game": "Exit the Electron application through the platform bridge. Developer key: quit_game.",
+    "back": "Return to the previous menu panel. Developer key: back.",
+    "pipeline_marker": "Toggle the title-screen pipeline marker used by template developers. Developer key: pipeline_marker.",
+    "launch_screen": "Toggle the developer-facing launch/loading screen. Developer key: launch_screen."
+  }
+}

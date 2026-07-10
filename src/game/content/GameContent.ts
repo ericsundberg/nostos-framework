@@ -1,6 +1,7 @@
 import type { Texture } from 'pixi.js';
 
 import type { GameplayData } from '../data/GameplayData';
+import type { LocalizationData } from '../localization/LocalizationData';
 import type { MusicData } from '../music/MusicData';
 import type { TitleScreenData } from '../data/TitleScreenData';
 
@@ -10,6 +11,7 @@ export interface GameContentAssets {
 
 export interface GameContentData {
   gameplay: GameplayData;
+  localization: LocalizationData;
   music: MusicData;
   titleScreen: TitleScreenData;
 }

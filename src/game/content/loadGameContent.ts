@@ -15,6 +15,10 @@ import {
   type TitleScreenData,
 } from '../data/TitleScreenData';
 import {
+  isLocalizationData,
+  type LocalizationData,
+} from '../localization/LocalizationData';
+import {
   isMusicData,
   type MusicData,
 } from '../music/MusicData';
@@ -31,6 +35,23 @@ export const loadGameContent =
     options: LoadGameContentOptions,
   ): Promise<GameContent> => {
     const { resolveAssetUrl } = options;
+
+    const localization =
+      await loadJsonAsset<LocalizationData>({
+        relativePath:
+          'localization/localization-en.json',
+
+        resolveAssetUrl,
+
+        validate:
+          isLocalizationData,
+      });
+
+    console.info(
+      `Loaded localization data for ${
+        localization.locale
+      }.`,
+    );
 
     const music =
       await loadJsonAsset<MusicData>({
@@ -123,6 +144,7 @@ export const loadGameContent =
 
       data: {
         gameplay,
+        localization,
         music,
         titleScreen,
       },
