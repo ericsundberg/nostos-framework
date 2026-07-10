@@ -9,6 +9,10 @@ import type { InputManager } from '../../core/input/InputManager';
 import type { Scene } from '../../core/scenes/Scene';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
 import type { TitleScreenData } from '../data/TitleScreenData';
+import { LoadGamePanel } from '../menus/LoadGamePanel';
+import { MainMenuPanel } from '../menus/MainMenuPanel';
+import type { MenuPanel } from '../menus/MenuPanel';
+import { SettingsMenuPanel } from '../menus/SettingsMenuPanel';
 import type { GameSettings } from '../settings/GameSettings';
 
 export interface TitleSceneOptions {
@@ -16,7 +20,10 @@ export interface TitleSceneOptions {
   data: TitleScreenData;
   input: InputManager;
   settings: SettingsManager<GameSettings>;
-  onContinue: () => void;
+  canContinue: boolean;
+  onNewGame: () => void;
+  onContinueGame: () => void;
+  onQuitGame: () => void;
 }
 
 export class TitleScene implements Scene {
@@ -26,10 +33,13 @@ export class TitleScene implements Scene {
   private readonly content =
     new Container();
 
+  private readonly menuHost =
+    new Container();
+
   private readonly marker: Sprite;
 
-  private unsubscribeConfirm:
-    (() => void) | null = null;
+  private activePanel:
+    MenuPanel | null = null;
 
   private unsubscribeSettings:
     (() => void) | null = null;
@@ -81,26 +91,9 @@ export class TitleScene implements Scene {
       data.layout.titleY,
     );
 
-    const prompt = new Text({
-      text: data.text.prompt,
-
-      style: {
-        fill:
-          data.style.promptColor,
-
-        fontFamily:
-          'Arial, sans-serif',
-
-        fontSize:
-          data.style.promptFontSize,
-      },
-    });
-
-    prompt.anchor.set(0.5);
-
-    prompt.position.set(
+    this.menuHost.position.set(
       0,
-      data.layout.promptY,
+      data.layout.promptY + 42,
     );
 
     this.content.addChild(
@@ -108,17 +101,15 @@ export class TitleScene implements Scene {
     );
 
     this.content.addChild(title);
-    this.content.addChild(prompt);
+
+    this.content.addChild(
+      this.menuHost,
+    );
+
     this.view.addChild(this.content);
   }
 
   public enter(): void {
-    this.unsubscribeConfirm =
-      this.options.input.onPressed(
-        'ui.confirm',
-        this.options.onContinue,
-      );
-
     this.unsubscribeSettings =
       this.options.settings.subscribe(
         (settings) => {
@@ -127,14 +118,15 @@ export class TitleScene implements Scene {
               .showPipelineMarker;
         },
       );
+
+    this.showMainMenu();
   }
 
   public exit(): void {
-    this.unsubscribeConfirm?.();
-    this.unsubscribeConfirm = null;
-
     this.unsubscribeSettings?.();
     this.unsubscribeSettings = null;
+
+    this.clearActivePanel();
   }
 
   public resize(
@@ -145,6 +137,11 @@ export class TitleScene implements Scene {
       width / 2,
       height / 2,
     );
+
+    this.activePanel?.resize?.(
+      width,
+      height,
+    );
   }
 
   public destroy(): void {
@@ -153,5 +150,95 @@ export class TitleScene implements Scene {
     this.view.destroy({
       children: true,
     });
+  }
+
+  private readonly showMainMenu =
+    (): void => {
+      this.showPanel(
+        new MainMenuPanel({
+          input:
+            this.options.input,
+
+          canContinue:
+            this.options.canContinue,
+
+          onNewGame:
+            this.options.onNewGame,
+
+          onContinue:
+            this.options.onContinueGame,
+
+          onLoadGame:
+            this.showLoadGameMenu,
+
+          onSettings:
+            this.showSettingsMenu,
+
+          onQuit:
+            this.options.onQuitGame,
+        }),
+      );
+    };
+
+  private readonly showLoadGameMenu =
+    (): void => {
+      this.showPanel(
+        new LoadGamePanel({
+          input:
+            this.options.input,
+
+          onBack:
+            this.showMainMenu,
+        }),
+      );
+    };
+
+  private readonly showSettingsMenu =
+    (): void => {
+      this.showPanel(
+        new SettingsMenuPanel({
+          input:
+            this.options.input,
+
+          settings:
+            this.options.settings,
+
+          onBack:
+            this.showMainMenu,
+        }),
+      );
+    };
+
+  private showPanel(
+    panel: MenuPanel,
+  ): void {
+    this.clearActivePanel();
+
+    this.activePanel = panel;
+
+    this.menuHost.addChild(
+      panel.view,
+    );
+
+    panel.enter?.();
+  }
+
+  private clearActivePanel(): void {
+    const panel = this.activePanel;
+
+    if (panel === null) {
+      return;
+    }
+
+    panel.exit?.();
+
+    if (panel.view.parent === this.menuHost) {
+      this.menuHost.removeChild(
+        panel.view,
+      );
+    }
+
+    panel.destroy?.();
+    this.activePanel = null;
   }
 }

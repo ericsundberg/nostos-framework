@@ -30,7 +30,9 @@ export const createGameServices =
 
           save: (value) =>
             window.gamePlatform
-              .settings.save(value),
+              .settings.save({
+                ...value,
+              }),
         },
       });
 
@@ -54,6 +56,8 @@ export const createGameServices =
         settings,
         music: new MusicService(),
         resolveAssetUrl,
+        quitApp: () =>
+          window.gamePlatform.app.quit(),
       });
 
     services.input.bindAction(

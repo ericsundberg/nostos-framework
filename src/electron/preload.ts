@@ -14,6 +14,9 @@ const LOAD_SETTINGS_CHANNEL =
 const SAVE_SETTINGS_CHANNEL =
   'settings:save';
 
+const QUIT_APP_CHANNEL =
+  'app:quit';
+
 const createAssetUrl = (
   relativePath: string,
 ): string => {
@@ -68,6 +71,14 @@ const gamePlatform: GamePlatform = {
       await ipcRenderer.invoke(
         SAVE_SETTINGS_CHANNEL,
         settings,
+      );
+    },
+  },
+
+  app: {
+    quit: async (): Promise<void> => {
+      await ipcRenderer.invoke(
+        QUIT_APP_CHANNEL,
       );
     },
   },

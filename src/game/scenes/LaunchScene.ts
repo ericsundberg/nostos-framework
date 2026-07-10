@@ -1,5 +1,6 @@
 import {
   Container,
+  Graphics,
   Text,
 } from 'pixi.js';
 
@@ -38,7 +39,14 @@ export class LaunchScene implements Scene {
   private readonly content =
     new Container();
 
+  private readonly panel =
+    new Graphics();
+
   private readonly statusText: Text;
+
+  private readonly timerText: Text;
+
+  private elapsedMilliseconds = 0;
 
   private hasExited = false;
 
@@ -46,6 +54,23 @@ export class LaunchScene implements Scene {
     private readonly options:
       LaunchSceneOptions,
   ) {
+    const bootLabel =
+      new Text({
+        text: 'BOOT / LOADING SCREEN TEST',
+        style: {
+          align: 'center',
+          fill: '#8ecae6',
+          fontFamily:
+            'Arial, sans-serif',
+          fontSize: 18,
+          fontWeight: 'bold',
+          letterSpacing: 2,
+        },
+      });
+
+    bootLabel.anchor.set(0.5);
+    bootLabel.position.set(0, -150);
+
     const title =
       new Text({
         text: 'Not What It Seems',
@@ -54,30 +79,30 @@ export class LaunchScene implements Scene {
           fill: '#f5f5f5',
           fontFamily:
             'Arial, sans-serif',
-          fontSize: 42,
+          fontSize: 46,
           fontWeight: 'bold',
         },
       });
 
     title.anchor.set(0.5);
-    title.position.set(0, -48);
+    title.position.set(0, -92);
 
     const badges =
       new Text({
         text:
-          'Built with Electron + PixiJS',
+          '[ Studio Logo ]   [ Electron ]   [ PixiJS ]',
         style: {
           align: 'center',
-          fill: '#8ecae6',
+          fill: '#f5f5f5',
           fontFamily:
             'Arial, sans-serif',
-          fontSize: 20,
+          fontSize: 22,
           fontWeight: 'bold',
         },
       });
 
     badges.anchor.set(0.5);
-    badges.position.set(0, 10);
+    badges.position.set(0, -20);
 
     this.statusText =
       new Text({
@@ -88,21 +113,42 @@ export class LaunchScene implements Scene {
           fill: '#b8bec9',
           fontFamily:
             'Arial, sans-serif',
-          fontSize: 18,
-          lineHeight: 26,
+          fontSize: 19,
+          lineHeight: 28,
           wordWrap: true,
-          wordWrapWidth: 560,
+          wordWrapWidth: 640,
         },
       });
 
     this.statusText.anchor.set(0.5);
-    this.statusText.position.set(0, 58);
+    this.statusText.position.set(0, 54);
 
+    this.timerText =
+      new Text({
+        text: 'Minimum display timer: 0.0s / 5.0s',
+        style: {
+          align: 'center',
+          fill: '#8ecae6',
+          fontFamily:
+            'Arial, sans-serif',
+          fontSize: 16,
+        },
+      });
+
+    this.timerText.anchor.set(0.5);
+    this.timerText.position.set(0, 108);
+
+    this.content.addChild(this.panel);
+    this.content.addChild(bootLabel);
     this.content.addChild(title);
     this.content.addChild(badges);
 
     this.content.addChild(
       this.statusText,
+    );
+
+    this.content.addChild(
+      this.timerText,
     );
 
     this.view.addChild(this.content);
@@ -116,6 +162,41 @@ export class LaunchScene implements Scene {
     this.hasExited = true;
   }
 
+  public update(
+    deltaMilliseconds: number,
+  ): void {
+    this.elapsedMilliseconds +=
+      deltaMilliseconds;
+
+    const elapsedSeconds =
+      Math.min(
+        this.elapsedMilliseconds,
+        this.options
+          .minimumMilliseconds,
+      ) / 1000;
+
+    const minimumSeconds =
+      this.options
+        .minimumMilliseconds / 1000;
+
+    const dots =
+      '.'.repeat(
+        Math.floor(
+          this.elapsedMilliseconds / 400,
+        ) % 4,
+      );
+
+    this.statusText.text =
+      `Loading public game assets${dots}`;
+
+    this.timerText.text =
+      `Minimum display timer: ${
+        elapsedSeconds.toFixed(1)
+      }s / ${
+        minimumSeconds.toFixed(1)
+      }s`;
+  }
+
   public resize(
     width: number,
     height: number,
@@ -124,6 +205,8 @@ export class LaunchScene implements Scene {
       width / 2,
       height / 2,
     );
+
+    this.drawPanel();
   }
 
   public destroy(): void {
@@ -132,6 +215,37 @@ export class LaunchScene implements Scene {
     this.view.destroy({
       children: true,
     });
+  }
+
+  private drawPanel(): void {
+    this.panel.clear();
+
+    this.panel
+      .roundRect(
+        -390,
+        -205,
+        780,
+        410,
+        18,
+      )
+      .fill('#171b22')
+      .stroke({
+        color: '#42556a',
+        width: 2,
+      });
+
+    this.panel
+      .roundRect(
+        -340,
+        -54,
+        680,
+        78,
+        10,
+      )
+      .stroke({
+        color: '#394150',
+        width: 2,
+      });
   }
 
   private async runLaunchSequence():

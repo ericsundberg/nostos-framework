@@ -1,8 +1,28 @@
-import { app, BrowserWindow } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+} from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { registerAssetProtocol, registerAssetScheme } from './assets';
+
+import {
+  registerAssetProtocol,
+  registerAssetScheme,
+} from './assets';
 import { registerSettingsIpc } from './settings';
+
+const QUIT_APP_CHANNEL =
+  'app:quit';
+
+const registerAppIpc = (): void => {
+  ipcMain.handle(
+    QUIT_APP_CHANNEL,
+    () => {
+      app.quit();
+    },
+  );
+};
 
 registerAssetScheme();
 
@@ -29,12 +49,18 @@ const createWindow = (): void => {
     action: 'deny',
   }));
 
-  mainWindow.webContents.on('will-navigate', (event) => {
-    event.preventDefault();
-  });
+  mainWindow.webContents.on(
+    'will-navigate',
+    (event) => {
+      event.preventDefault();
+    },
+  );
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    void mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    void mainWindow.loadURL(
+      MAIN_WINDOW_VITE_DEV_SERVER_URL,
+    );
+
     mainWindow.webContents.openDevTools();
   } else {
     void mainWindow.loadFile(
@@ -49,10 +75,14 @@ const createWindow = (): void => {
 void app.whenReady().then(() => {
   registerAssetProtocol();
   registerSettingsIpc();
+  registerAppIpc();
   createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (
+      BrowserWindow.getAllWindows()
+        .length === 0
+    ) {
       createWindow();
     }
   });

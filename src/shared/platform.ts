@@ -10,6 +10,10 @@ export interface GamePlatform {
       settings: Record<string, unknown>,
     ) => Promise<void>;
   };
+
+  app: {
+    quit: () => Promise<void>;
+  };
 }
 
 declare global {
