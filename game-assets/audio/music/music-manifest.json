@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "tracks": {
+    "title.main": {
+      "src": "audio/music/caves-of-sorrow.ogg",
+      "volume": 1.0
+    },
+    "game.exploration.1": {
+      "src": "audio/music/observing-the-star.ogg",
+      "volume": 1.0
+    }
+  },
+  "playlists": {
+    "title": [
+      "title.main"
+    ],
+    "game.exploration": [
+      "game.exploration.1"
+    ],
+    "game.combat": [
+      "game.exploration.1"
+    ]
+  },
+  "rules": [
+    {
+      "id": "title",
+      "when": {
+        "screen": "title"
+      },
+      "playlist": "title"
+    },
+    {
+      "id": "game.exploration",
+      "when": {
+        "screen": "game",
+        "combat": false
+      },
+      "playlist": "game.exploration",
+      "cycle": true
+    },
+    {
+      "id": "game.combat",
+      "when": {
+        "screen": "game",
+        "combat": true
+      },
+      "playlist": "game.combat",
+      "cycle": true
+    }
+  ]
+}

@@ -56,7 +56,7 @@ export const loadGameContent =
     const music =
       await loadJsonAsset<MusicData>({
         relativePath:
-          'music.json',
+          'audio/music/music-manifest.json',
 
         resolveAssetUrl,
 
