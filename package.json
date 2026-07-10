@@ -1,6 +1,6 @@
 {
   "name": "nostos-framework",
-  "productName": "not-what-it-seems",
+  "productName": "Nostos Framework",
   "version": "0.0.21-prealpha",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "eric",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@electron-forge/cli": "^7.11.2",
     "@electron-forge/maker-deb": "^7.11.2",
