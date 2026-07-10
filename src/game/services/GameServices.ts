@@ -4,6 +4,7 @@ import { InputManager } from '../../core/input/InputManager';
 import { SceneManager } from '../../core/scenes/SceneManager';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
 import type { GameContent } from '../content/GameContent';
+import { MusicDirector } from '../music/MusicDirector';
 import type { GameSettings } from '../settings/GameSettings';
 import type { MusicService } from './MusicService';
 
@@ -16,6 +17,7 @@ export interface GameServicesOptions {
   resolveAssetUrl: (
     relativePath: string,
   ) => string;
+  quitApp: () => Promise<void>;
 }
 
 export class GameServices {
@@ -36,8 +38,14 @@ export class GameServices {
   public readonly resolveAssetUrl:
     (relativePath: string) => string;
 
+  public readonly quitApp:
+    () => Promise<void>;
+
   private content:
     GameContent | null = null;
+
+  private musicDirector:
+    MusicDirector | null = null;
 
   private isDestroyed = false;
 
@@ -49,6 +57,7 @@ export class GameServices {
     this.music = options.music;
     this.resolveAssetUrl =
       options.resolveAssetUrl;
+    this.quitApp = options.quitApp;
 
     options.host.appendChild(
       this.app.canvas,
@@ -65,6 +74,18 @@ export class GameServices {
     content: GameContent,
   ): void {
     this.content = content;
+
+    this.musicDirector =
+      new MusicDirector({
+        data:
+          content.data.music,
+
+        music:
+          this.music,
+
+        resolveAssetUrl:
+          this.resolveAssetUrl,
+      });
   }
 
   public getContent(): GameContent {
@@ -77,6 +98,17 @@ export class GameServices {
     return this.content;
   }
 
+  public getMusicDirector():
+    MusicDirector {
+    if (this.musicDirector === null) {
+      throw new Error(
+        'Music director has not been initialized.',
+      );
+    }
+
+    return this.musicDirector;
+  }
+
   public destroy(): void {
     if (this.isDestroyed) {
       return;
@@ -84,6 +116,7 @@ export class GameServices {
 
     this.isDestroyed = true;
 
+    this.musicDirector?.stop();
     this.music.destroy();
     this.scenes.destroy();
     this.input.destroy();

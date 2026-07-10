@@ -50,9 +50,11 @@ export class GameRouter {
       const content =
         this.services.getContent();
 
-      this.services.music.playLoop(
-        content.assets.mainMenuMusicUrl,
-      );
+      this.services
+        .getMusicDirector()
+        .setContext({
+          screen: 'title',
+        });
 
       this.services.scenes.show(
         new TitleScene({
@@ -70,8 +72,20 @@ export class GameRouter {
           settings:
             this.services.settings,
 
-          onContinue:
+          canContinue:
+            false,
+
+          onNewGame:
             this.showGameplayScene,
+
+          onContinueGame:
+            this.showGameplayScene,
+
+          onQuitGame:
+            () => {
+              void this.services
+                .quitApp();
+            },
         }),
       );
     };
@@ -81,7 +95,12 @@ export class GameRouter {
       const content =
         this.services.getContent();
 
-      this.services.music.stop();
+      this.services
+        .getMusicDirector()
+        .setContext({
+          screen: 'game',
+          combat: false,
+        });
 
       this.services.scenes.show(
         new GameplayScene({

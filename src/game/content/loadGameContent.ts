@@ -14,6 +14,10 @@ import {
   isTitleScreenData,
   type TitleScreenData,
 } from '../data/TitleScreenData';
+import {
+  isMusicData,
+  type MusicData,
+} from '../music/MusicData';
 import type { GameContent } from './GameContent';
 
 export interface LoadGameContentOptions {
@@ -28,10 +32,20 @@ export const loadGameContent =
   ): Promise<GameContent> => {
     const { resolveAssetUrl } = options;
 
-    const mainMenuMusicUrl =
-      resolveAssetUrl(
-        'audio/music/main-menu.ogg',
-      );
+    const music =
+      await loadJsonAsset<MusicData>({
+        relativePath:
+          'music.json',
+
+        resolveAssetUrl,
+
+        validate:
+          isMusicData,
+      });
+
+    console.info(
+      'Loaded validated music data.',
+    );
 
     const titleScreen =
       await loadJsonAsset<TitleScreenData>({
@@ -105,11 +119,11 @@ export const loadGameContent =
     return {
       assets: {
         markerTexture,
-        mainMenuMusicUrl,
       },
 
       data: {
         gameplay,
+        music,
         titleScreen,
       },
     };
