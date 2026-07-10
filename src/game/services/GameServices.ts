@@ -1,25 +1,11 @@
-import type {
-  Application,
-  Texture,
-} from 'pixi.js';
+import type { Application } from 'pixi.js';
 
 import { InputManager } from '../../core/input/InputManager';
 import { SceneManager } from '../../core/scenes/SceneManager';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
-import type { GameplayData } from '../data/GameplayData';
-import type { TitleScreenData } from '../data/TitleScreenData';
+import type { GameContent } from '../content/GameContent';
 import type { GameSettings } from '../settings/GameSettings';
 import type { MusicService } from './MusicService';
-
-export interface GameAssets {
-  markerTexture: Texture;
-  mainMenuMusicUrl: string;
-}
-
-export interface GameData {
-  gameplay: GameplayData;
-  titleScreen: TitleScreenData;
-}
 
 export interface GameServicesOptions {
   app: Application;
@@ -27,8 +13,9 @@ export interface GameServicesOptions {
   settings:
     SettingsManager<GameSettings>;
   music: MusicService;
-  assets: GameAssets;
-  data: GameData;
+  resolveAssetUrl: (
+    relativePath: string,
+  ) => string;
 }
 
 export class GameServices {
@@ -42,15 +29,15 @@ export class GameServices {
 
   public readonly settings:
     SettingsManager<GameSettings>;
-    
+
   public readonly music:
     MusicService;
 
-  public readonly assets:
-    GameAssets;
+  public readonly resolveAssetUrl:
+    (relativePath: string) => string;
 
-  public readonly data:
-    GameData;
+  private content:
+    GameContent | null = null;
 
   private isDestroyed = false;
 
@@ -60,8 +47,8 @@ export class GameServices {
     this.app = options.app;
     this.settings = options.settings;
     this.music = options.music;
-    this.assets = options.assets;
-    this.data = options.data;
+    this.resolveAssetUrl =
+      options.resolveAssetUrl;
 
     options.host.appendChild(
       this.app.canvas,
@@ -72,6 +59,22 @@ export class GameServices {
 
     this.scenes =
       new SceneManager(this.app);
+  }
+
+  public setContent(
+    content: GameContent,
+  ): void {
+    this.content = content;
+  }
+
+  public getContent(): GameContent {
+    if (this.content === null) {
+      throw new Error(
+        'Game content has not been loaded.',
+      );
+    }
+
+    return this.content;
   }
 
   public destroy(): void {

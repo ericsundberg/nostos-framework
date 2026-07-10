@@ -78,19 +78,23 @@ describe(
         expect(
           normalizeGameSettings({
             showPipelineMarker: false,
+            showLaunchScreen: false,
           }),
         ).toEqual({
           showPipelineMarker: false,
+          showLaunchScreen: false,
         });
 
         expect(
           normalizeGameSettings({
-            showPipelineMarker:
-              'invalid',
+            showPipelineMarker: false,
           }),
-        ).toEqual(
-          DEFAULT_GAME_SETTINGS,
-        );
+        ).toEqual({
+          showPipelineMarker: false,
+          showLaunchScreen:
+            DEFAULT_GAME_SETTINGS
+              .showLaunchScreen,
+        });
 
         expect(
           normalizeGameSettings(null),

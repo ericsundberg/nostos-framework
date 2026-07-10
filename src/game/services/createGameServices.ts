@@ -1,27 +1,11 @@
-import {
-  Assets,
-  Texture,
-} from 'pixi.js';
-
 import { createGameApplication } from '../../core/application/createGameApplication';
-import { initializeAssetBundles } from '../../core/assets/initializeAssetBundles';
-import { loadAssetManifest } from '../../core/assets/loadAssetManifest';
-import { loadJsonAsset } from '../../core/data/loadJsonAsset';
 import { SettingsManager } from '../../core/settings/SettingsManager';
-import { MusicService } from './MusicService';
-import {
-  isGameplayData,
-  type GameplayData,
-} from '../data/GameplayData';
-import {
-  isTitleScreenData,
-  type TitleScreenData,
-} from '../data/TitleScreenData';
 import {
   type GameSettings,
   normalizeGameSettings,
 } from '../settings/GameSettings';
 import { GameServices } from './GameServices';
+import { MusicService } from './MusicService';
 
 export const createGameServices =
   async (
@@ -32,11 +16,6 @@ export const createGameServices =
     ): string =>
       window.gamePlatform.assets.url(
         relativePath,
-      );
-      
-    const mainMenuMusicUrl =
-      resolveAssetUrl(
-        'audio/music/main-menu.ogg',
       );
 
     const settings =
@@ -61,75 +40,6 @@ export const createGameServices =
       'Loaded persistent game settings.',
     );
 
-    const titleScreen =
-      await loadJsonAsset<TitleScreenData>({
-        relativePath:
-          'data/title-screen.json',
-
-        resolveAssetUrl,
-
-        validate:
-          isTitleScreenData,
-      });
-
-    console.info(
-      'Loaded validated title-screen data.',
-    );
-
-    const gameplay =
-      await loadJsonAsset<GameplayData>({
-        relativePath:
-          'data/gameplay.json',
-
-        resolveAssetUrl,
-
-        validate:
-          isGameplayData,
-      });
-
-    console.info(
-      'Loaded validated gameplay data.',
-    );
-
-    const manifest =
-      await loadAssetManifest(
-        resolveAssetUrl,
-      );
-
-    await initializeAssetBundles(
-      manifest,
-      resolveAssetUrl,
-    );
-
-    const startupAssets:
-      Record<string, unknown> =
-        await Assets.loadBundle(
-          'startup',
-        );
-
-    const markerTexture =
-      startupAssets[
-        'ui.pipeline-marker'
-      ];
-
-    if (
-      !(markerTexture instanceof Texture)
-    ) {
-      throw new Error(
-        'The startup bundle did not provide ui.pipeline-marker.',
-      );
-    }
-
-    console.info(
-      `Loaded asset manifest schema ${
-        manifest.schemaVersion
-      }.`,
-    );
-
-    console.info(
-      'Loaded PixiJS startup asset bundle.',
-    );
-
     const app =
       await createGameApplication({
         background: '#111318',
@@ -137,23 +47,14 @@ export const createGameServices =
         antialias: true,
       });
 
-  const services =
-    new GameServices({
-      app,
-      host,
-      settings,
-      music: new MusicService(),
-
-      assets: {
-        markerTexture,
-        mainMenuMusicUrl,
-      },
-
-      data: {
-        gameplay,
-        titleScreen,
-      },
-    });
+    const services =
+      new GameServices({
+        app,
+        host,
+        settings,
+        music: new MusicService(),
+        resolveAssetUrl,
+      });
 
     services.input.bindAction(
       'ui.confirm',

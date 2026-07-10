@@ -11,7 +11,7 @@ export async function startGame(
     const router =
       new GameRouter(services);
 
-    router.start();
+    await router.start();
   } catch (error: unknown) {
     services.destroy();
     throw error;

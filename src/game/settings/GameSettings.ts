@@ -1,10 +1,12 @@
 export interface GameSettings {
   showPipelineMarker: boolean;
+  showLaunchScreen: boolean;
 }
 
 export const DEFAULT_GAME_SETTINGS:
   GameSettings = {
     showPipelineMarker: true,
+    showLaunchScreen: true,
   };
 
 const isRecord = (
@@ -30,5 +32,12 @@ export const normalizeGameSettings = (
         ? value.showPipelineMarker
         : DEFAULT_GAME_SETTINGS
           .showPipelineMarker,
+
+    showLaunchScreen:
+      typeof value.showLaunchScreen ===
+      'boolean'
+        ? value.showLaunchScreen
+        : DEFAULT_GAME_SETTINGS
+          .showLaunchScreen,
   };
 };
