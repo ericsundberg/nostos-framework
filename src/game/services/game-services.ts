@@ -1,13 +1,14 @@
 import type { Application } from 'pixi.js';
 
-import { InputManager } from '../../core/input/InputManager';
-import { SceneManager } from '../../core/scenes/SceneManager';
-import type { SettingsManager } from '../../core/settings/SettingsManager';
-import type { GameContent } from '../content/GameContent';
-import { LocalizationService } from '../localization/LocalizationService';
-import { MusicDirector } from '../music/MusicDirector';
-import type { GameSettings } from '../settings/GameSettings';
-import type { MusicService } from './MusicService';
+import { InputManager } from '../../core/input/input-manager';
+import { SceneManager } from '../../core/scenes/scene-manager';
+import type { SettingsManager } from '../../core/settings/settings-manager';
+import type { GameContent } from '../content/game-content';
+import type { LocalizationData } from '../localization/localization-data';
+import { LocalizationService } from '../localization/localization-service';
+import { MusicDirector } from '../music/music-director';
+import type { GameSettings } from '../settings/game-settings';
+import type { MusicService } from './music-service';
 
 export interface GameServicesOptions {
   app: Application;
@@ -74,15 +75,19 @@ export class GameServices {
       new SceneManager(this.app);
   }
 
+  public setLocalizationData(
+    localizationData: LocalizationData,
+  ): void {
+    this.localization =
+      new LocalizationService(
+        localizationData,
+      );
+  }
+
   public setContent(
     content: GameContent,
   ): void {
     this.content = content;
-
-    this.localization =
-      new LocalizationService(
-        content.data.localization,
-      );
 
     this.musicDirector =
       new MusicDirector({

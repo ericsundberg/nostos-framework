@@ -1,5 +1,5 @@
-import { GameRouter } from './navigation/GameRouter';
-import { createGameServices } from './services/createGameServices';
+import { GameRouter } from './navigation/game-router';
+import { createGameServices } from './services/create-game-services';
 
 export async function startGame(
   host: HTMLElement,

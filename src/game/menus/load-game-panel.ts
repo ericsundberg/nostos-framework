@@ -3,10 +3,10 @@ import {
   Text,
 } from 'pixi.js';
 
-import type { InputManager } from '../../core/input/InputManager';
-import type { LocalizationService } from '../localization/LocalizationService';
-import type { MenuPanel } from './MenuPanel';
-import { MenuButton } from './MenuButton';
+import type { InputManager } from '../../core/input/input-manager';
+import type { LocalizationService } from '../localization/localization-service';
+import type { MenuPanel } from './menu-panel';
+import { MenuButton } from './menu-button';
 
 export interface LoadGamePanelOptions {
   input: InputManager;

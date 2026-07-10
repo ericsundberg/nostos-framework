@@ -16,7 +16,7 @@ export interface GameplayData {
   };
 
   text: {
-    instructions: string;
+    instructionsKey: string;
   };
 }
 
@@ -97,7 +97,7 @@ export const isGameplayData = (
     !isPositiveNumber(playerSpeed) ||
     !isNonEmptyString(playerColor) ||
     !isNonEmptyString(
-      text.instructions,
+      text.instructionsKey,
     )
   ) {
     return false;

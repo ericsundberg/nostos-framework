@@ -1,9 +1,9 @@
-import type { MusicService } from '../services/MusicService';
+import type { MusicService } from '../services/music-service';
 import type {
   MusicContext,
   MusicData,
   MusicRule,
-} from './MusicData';
+} from './music-data';
 
 export interface MusicDirectorOptions {
   data: MusicData;

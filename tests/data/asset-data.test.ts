@@ -6,16 +6,16 @@ import {
   vi,
 } from 'vitest';
 
-import { loadAssetManifest } from '../../src/core/assets/loadAssetManifest';
-import { loadJsonAsset } from '../../src/core/data/loadJsonAsset';
+import { loadAssetManifest } from '../../src/core/assets/load-asset-manifest';
+import { loadJsonAsset } from '../../src/core/data/load-json-asset';
 import {
   isTitleScreenData,
   type TitleScreenData,
-} from '../../src/game/data/TitleScreenData';
+} from '../../src/game/data/title-screen-data';
 import {
   DEFAULT_GAME_SETTINGS,
   normalizeGameSettings,
-} from '../../src/game/settings/GameSettings';
+} from '../../src/game/settings/game-settings';
 
 const validTitleScreen:
   TitleScreenData = {

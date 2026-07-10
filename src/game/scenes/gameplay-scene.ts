@@ -4,19 +4,21 @@ import {
   Text,
 } from 'pixi.js';
 
-import type { InputManager } from '../../core/input/InputManager';
-import type { Scene } from '../../core/scenes/Scene';
-import type { SettingsManager } from '../../core/settings/SettingsManager';
-import type { GameplayData } from '../data/GameplayData';
-import type { GameSettings } from '../settings/GameSettings';
+import type { InputManager } from '../../core/input/input-manager';
+import type { Scene } from '../../core/scenes/scene';
+import type { SettingsManager } from '../../core/settings/settings-manager';
+import type { GameplayData } from '../data/gameplay-data';
+import type { LocalizationService } from '../localization/localization-service';
+import type { GameSettings } from '../settings/game-settings';
 import {
   movePlayer,
   type PlayerMovementBounds,
-} from '../systems/PlayerMovement';
+} from '../systems/player-movement';
 
 export interface GameplaySceneOptions {
   data: GameplayData;
   input: InputManager;
+  localization: LocalizationService;
   settings: SettingsManager<GameSettings>;
   onBack: () => void;
 }
@@ -117,7 +119,9 @@ export class GameplayScene implements Scene {
     const instructions =
       new Text({
         text:
-          data.text.instructions,
+          options.localization.text(
+            data.text.instructionsKey,
+          ),
 
         style: {
           align: 'center',
@@ -332,8 +336,12 @@ export class GameplayScene implements Scene {
     isVisible: boolean,
   ): void {
     this.statusText.text =
-      `Title marker: ${
-        isVisible ? 'ON' : 'OFF'
+      `${this.options.localization.text(
+        'title_marker',
+      )}: ${
+        this.options.localization.text(
+          isVisible ? 'on' : 'off',
+        )
       }`;
   }
 }

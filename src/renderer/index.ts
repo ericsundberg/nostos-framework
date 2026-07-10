@@ -1,7 +1,7 @@
 import './styles/base.css';
 
 import { startGame } from '../game/bootstrap';
-import { StartupScreen } from './startup/StartupScreen';
+import { StartupScreen } from './startup/startup-screen';
 
 const startupScreen =
   new StartupScreen(document.body);

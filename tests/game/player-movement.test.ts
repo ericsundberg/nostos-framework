@@ -7,7 +7,7 @@ import {
 import {
   movePlayer,
   type PlayerMovementBounds,
-} from '../../src/game/systems/PlayerMovement';
+} from '../../src/game/systems/player-movement';
 
 const bounds:
   PlayerMovementBounds = {

@@ -7,7 +7,7 @@ import {
 import {
   isMusicData,
   type MusicData,
-} from '../../src/game/music/MusicData';
+} from '../../src/game/music/music-data';
 
 const validMusicData: MusicData = {
   schemaVersion: 1,

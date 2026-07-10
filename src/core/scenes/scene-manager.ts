@@ -3,7 +3,7 @@ import type {
   Ticker,
 } from 'pixi.js';
 
-import type { Scene } from './Scene';
+import type { Scene } from './scene';
 
 export class SceneManager {
   private activeScene: Scene | null = null;

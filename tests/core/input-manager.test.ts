@@ -6,7 +6,7 @@ import {
   vi,
 } from 'vitest';
 
-import { InputManager } from '../../src/core/input/InputManager';
+import { InputManager } from '../../src/core/input/input-manager';
 
 const createKeyboardEvent = (
   type: 'keydown' | 'keyup',

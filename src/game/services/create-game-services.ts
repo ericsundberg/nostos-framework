@@ -1,11 +1,11 @@
-import { createGameApplication } from '../../core/application/createGameApplication';
-import { SettingsManager } from '../../core/settings/SettingsManager';
+import { createGameApplication } from '../../core/application/create-game-application';
+import { SettingsManager } from '../../core/settings/settings-manager';
 import {
   type GameSettings,
   normalizeGameSettings,
-} from '../settings/GameSettings';
-import { GameServices } from './GameServices';
-import { MusicService } from './MusicService';
+} from '../settings/game-settings';
+import { GameServices } from './game-services';
+import { MusicService } from './music-service';
 
 export const createGameServices =
   async (

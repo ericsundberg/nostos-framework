@@ -4,9 +4,11 @@ import {
   Text,
 } from 'pixi.js';
 
-import type { Scene } from '../../core/scenes/Scene';
+import type { Scene } from '../../core/scenes/scene';
+import type { LocalizationService } from '../localization/localization-service';
 
 export interface LaunchSceneOptions {
+  localization: LocalizationService;
   minimumMilliseconds: number;
   loadingTask: () => Promise<void>;
   onComplete: () => void;
@@ -14,6 +16,7 @@ export interface LaunchSceneOptions {
 
 const getErrorMessage = (
   error: unknown,
+  unknownFallback: string,
 ): string => {
   if (
     error instanceof Error &&
@@ -29,7 +32,7 @@ const getErrorMessage = (
     return error;
   }
 
-  return 'An unknown loading error occurred.';
+  return unknownFallback;
 };
 
 export class LaunchScene implements Scene {
@@ -54,9 +57,14 @@ export class LaunchScene implements Scene {
     private readonly options:
       LaunchSceneOptions,
   ) {
+    const { localization } = options;
+
     const bootLabel =
       new Text({
-        text: 'BOOT / LOADING SCREEN TEST',
+        text:
+          localization.text(
+            'launch_boot_label',
+          ),
         style: {
           align: 'center',
           fill: '#8ecae6',
@@ -73,7 +81,10 @@ export class LaunchScene implements Scene {
 
     const title =
       new Text({
-        text: 'Not What It Seems',
+        text:
+          localization.text(
+            'game_title',
+          ),
         style: {
           align: 'center',
           fill: '#f5f5f5',
@@ -90,7 +101,9 @@ export class LaunchScene implements Scene {
     const badges =
       new Text({
         text:
-          '[ Studio Logo ]   [ Electron ]   [ PixiJS ]',
+          localization.text(
+            'launch_badges',
+          ),
         style: {
           align: 'center',
           fill: '#f5f5f5',
@@ -107,7 +120,9 @@ export class LaunchScene implements Scene {
     this.statusText =
       new Text({
         text:
-          'Loading public game assets…',
+          localization.text(
+            'launch_loading_assets',
+          ),
         style: {
           align: 'center',
           fill: '#b8bec9',
@@ -125,7 +140,18 @@ export class LaunchScene implements Scene {
 
     this.timerText =
       new Text({
-        text: 'Minimum display timer: 0.0s / 5.0s',
+        text:
+          localization.format(
+            'launch_timer',
+            {
+              elapsed: '0.0',
+              minimum:
+                (
+                  options
+                    .minimumMilliseconds / 1000
+                ).toFixed(1),
+            },
+          ),
         style: {
           align: 'center',
           fill: '#8ecae6',
@@ -187,14 +213,20 @@ export class LaunchScene implements Scene {
       );
 
     this.statusText.text =
-      `Loading public game assets${dots}`;
+      this.options.localization.text(
+        'launch_loading_assets',
+      ) + dots;
 
     this.timerText.text =
-      `Minimum display timer: ${
-        elapsedSeconds.toFixed(1)
-      }s / ${
-        minimumSeconds.toFixed(1)
-      }s`;
+      this.options.localization.format(
+        'launch_timer',
+        {
+          elapsed:
+            elapsedSeconds.toFixed(1),
+          minimum:
+            minimumSeconds.toFixed(1),
+        },
+      );
   }
 
   public resize(
@@ -277,8 +309,16 @@ export class LaunchScene implements Scene {
       );
 
       this.statusText.text =
-        'Failed to load game content.\n' +
-        getErrorMessage(error);
+        this.options.localization.text(
+          'launch_load_failed',
+        ) +
+        '\n' +
+        getErrorMessage(
+          error,
+          this.options.localization.text(
+            'launch_unknown_error',
+          ),
+        );
 
       return;
     }

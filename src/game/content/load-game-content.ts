@@ -3,26 +3,22 @@ import {
   Texture,
 } from 'pixi.js';
 
-import { initializeAssetBundles } from '../../core/assets/initializeAssetBundles';
-import { loadAssetManifest } from '../../core/assets/loadAssetManifest';
-import { loadJsonAsset } from '../../core/data/loadJsonAsset';
+import { initializeAssetBundles } from '../../core/assets/initialize-asset-bundles';
+import { loadAssetManifest } from '../../core/assets/load-asset-manifest';
+import { loadJsonAsset } from '../../core/data/load-json-asset';
 import {
   isGameplayData,
   type GameplayData,
-} from '../data/GameplayData';
+} from '../data/gameplay-data';
 import {
   isTitleScreenData,
   type TitleScreenData,
-} from '../data/TitleScreenData';
-import {
-  isLocalizationData,
-  type LocalizationData,
-} from '../localization/LocalizationData';
+} from '../data/title-screen-data';
 import {
   isMusicData,
   type MusicData,
-} from '../music/MusicData';
-import type { GameContent } from './GameContent';
+} from '../music/music-data';
+import type { GameContent } from './game-content';
 
 export interface LoadGameContentOptions {
   resolveAssetUrl: (
@@ -35,23 +31,6 @@ export const loadGameContent =
     options: LoadGameContentOptions,
   ): Promise<GameContent> => {
     const { resolveAssetUrl } = options;
-
-    const localization =
-      await loadJsonAsset<LocalizationData>({
-        relativePath:
-          'localization/localization-en.json',
-
-        resolveAssetUrl,
-
-        validate:
-          isLocalizationData,
-      });
-
-    console.info(
-      `Loaded localization data for ${
-        localization.locale
-      }.`,
-    );
 
     const music =
       await loadJsonAsset<MusicData>({
@@ -144,7 +123,6 @@ export const loadGameContent =
 
       data: {
         gameplay,
-        localization,
         music,
         titleScreen,
       },

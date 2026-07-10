@@ -5,12 +5,12 @@ import {
   vi,
 } from 'vitest';
 
-import { MusicDirector } from '../../src/game/music/MusicDirector';
-import type { MusicData } from '../../src/game/music/MusicData';
+import { MusicDirector } from '../../src/game/music/music-director';
+import type { MusicData } from '../../src/game/music/music-data';
 import type {
   MusicPlaybackOptions,
   MusicService,
-} from '../../src/game/services/MusicService';
+} from '../../src/game/services/music-service';
 
 const musicData: MusicData = {
   schemaVersion: 1,

@@ -1,6 +1,6 @@
 import { Assets } from 'pixi.js';
 
-import type { AssetManifest } from './loadAssetManifest';
+import type { AssetManifest } from './load-asset-manifest';
 
 export const initializeAssetBundles = async (
   manifest: AssetManifest,

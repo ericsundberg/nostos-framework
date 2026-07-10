@@ -2,7 +2,15 @@
   "schemaVersion": 1,
   "locale": "en",
   "strings": {
-    "game_title": "Not What It Seems",
+    "game_title": "Nostos Framework",
+
+    "launch_boot_label": "BOOT / LOADING SCREEN TEST",
+    "launch_badges": "[ Studio Logo ]   [ Electron ]   [ PixiJS ]",
+    "launch_loading_assets": "Loading public game assets",
+    "launch_timer": "Minimum display timer: {elapsed}s / {minimum}s",
+    "launch_load_failed": "Failed to load game content.",
+    "launch_unknown_error": "An unknown loading error occurred.",
+
     "new_game": "New Game",
     "continue_game": "Continue",
     "load_game": "Load Game",
@@ -10,18 +18,28 @@
     "quit_game": "Quit Game",
     "back": "Back",
     "no_save_files_found": "No save files found.",
+
+    "gameplay_instructions": "Move with WASD or the arrow keys.\nPress M to toggle the title marker.\nPress Escape to return.",
+    "title_marker": "Title marker",
     "pipeline_marker": "Pipeline Marker",
     "launch_screen": "Launch Screen",
     "on": "On",
     "off": "Off"
   },
   "descriptions": {
+    "launch_boot_label": "Developer-facing boot label. This is intentionally obvious in the template build.",
+    "launch_badges": "Developer-facing placeholder for studio/framework/logo badges.",
+    "launch_loading_assets": "Shown while public game assets are loading.",
+    "launch_timer": "Shown while the launch scene holds for its minimum visual-test duration.",
+
     "new_game": "Start a fresh template gameplay session. Developer key: new_game.",
     "continue_game": "Continue from the newest valid save file. Hidden until a save system exists. Developer key: continue_game.",
     "load_game": "Open the load-game panel inside the persistent title scene. Developer key: load_game.",
     "settings": "Open the settings panel while keeping the title scene active. Developer key: settings.",
     "quit_game": "Exit the Electron application through the platform bridge. Developer key: quit_game.",
     "back": "Return to the previous menu panel. Developer key: back.",
+    "gameplay_instructions": "Instruction text for the default test gameplay scene. Developer key: gameplay_instructions.",
+    "title_marker": "Status label for the title marker setting. Developer key: title_marker.",
     "pipeline_marker": "Toggle the title-screen pipeline marker used by template developers. Developer key: pipeline_marker.",
     "launch_screen": "Toggle the developer-facing launch/loading screen. Developer key: launch_screen."
   }

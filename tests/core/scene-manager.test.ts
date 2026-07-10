@@ -11,8 +11,8 @@ import {
   vi,
 } from 'vitest';
 
-import type { Scene } from '../../src/core/scenes/Scene';
-import { SceneManager } from '../../src/core/scenes/SceneManager';
+import type { Scene } from '../../src/core/scenes/scene';
+import { SceneManager } from '../../src/core/scenes/scene-manager';
 
 interface FakeView {
   parent: unknown | null;

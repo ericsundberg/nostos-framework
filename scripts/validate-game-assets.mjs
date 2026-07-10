@@ -433,11 +433,11 @@ const validateGameplayData = (
   if (
     !isRecord(text) ||
     !isNonEmptyString(
-      text.instructions,
+      text.instructionsKey,
     )
   ) {
     problems.push(
-      'text.instructions must be a non-empty string.',
+      'text.instructionsKey must be a non-empty localization key string.',
     );
   }
 

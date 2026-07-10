@@ -5,16 +5,16 @@ import {
   Texture,
 } from 'pixi.js';
 
-import type { InputManager } from '../../core/input/InputManager';
-import type { Scene } from '../../core/scenes/Scene';
-import type { SettingsManager } from '../../core/settings/SettingsManager';
-import type { TitleScreenData } from '../data/TitleScreenData';
-import type { LocalizationService } from '../localization/LocalizationService';
-import { LoadGamePanel } from '../menus/LoadGamePanel';
-import { MainMenuPanel } from '../menus/MainMenuPanel';
-import type { MenuPanel } from '../menus/MenuPanel';
-import { SettingsMenuPanel } from '../menus/SettingsMenuPanel';
-import type { GameSettings } from '../settings/GameSettings';
+import type { InputManager } from '../../core/input/input-manager';
+import type { Scene } from '../../core/scenes/scene';
+import type { SettingsManager } from '../../core/settings/settings-manager';
+import type { TitleScreenData } from '../data/title-screen-data';
+import type { LocalizationService } from '../localization/localization-service';
+import { LoadGamePanel } from '../menus/load-game-panel';
+import { MainMenuPanel } from '../menus/main-menu-panel';
+import type { MenuPanel } from '../menus/menu-panel';
+import { SettingsMenuPanel } from '../menus/settings-menu-panel';
+import type { GameSettings } from '../settings/game-settings';
 
 export interface TitleSceneOptions {
   markerTexture: Texture;

@@ -1,9 +1,8 @@
 import type { Texture } from 'pixi.js';
 
-import type { GameplayData } from '../data/GameplayData';
-import type { LocalizationData } from '../localization/LocalizationData';
-import type { MusicData } from '../music/MusicData';
-import type { TitleScreenData } from '../data/TitleScreenData';
+import type { GameplayData } from '../data/gameplay-data';
+import type { MusicData } from '../music/music-data';
+import type { TitleScreenData } from '../data/title-screen-data';
 
 export interface GameContentAssets {
   markerTexture: Texture;
@@ -11,7 +10,6 @@ export interface GameContentAssets {
 
 export interface GameContentData {
   gameplay: GameplayData;
-  localization: LocalizationData;
   music: MusicData;
   titleScreen: TitleScreenData;
 }

@@ -1,4 +1,7 @@
-import type { LocalizationData } from './LocalizationData';
+import type { LocalizationData } from './localization-data';
+
+type FormatValues =
+  Record<string, string | number | boolean>;
 
 export class LocalizationService {
   private readonly missingKeys =
@@ -23,6 +26,26 @@ export class LocalizationService {
     this.warnMissingKey(key);
 
     return fallback ?? `[${key}]`;
+  }
+
+  public format(
+    key: string,
+    values: FormatValues,
+    fallback?: string,
+  ): string {
+    const template =
+      this.text(key, fallback);
+
+    return template.replace(
+      /\{([a-zA-Z0-9_]+)\}/gu,
+      (match, name: string) => {
+        const value = values[name];
+
+        return value === undefined
+          ? match
+          : String(value);
+      },
+    );
   }
 
   public description(

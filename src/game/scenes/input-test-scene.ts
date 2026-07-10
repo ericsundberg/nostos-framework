@@ -3,10 +3,10 @@ import {
   Text,
 } from 'pixi.js';
 
-import type { InputManager } from '../../core/input/InputManager';
-import type { Scene } from '../../core/scenes/Scene';
-import type { SettingsManager } from '../../core/settings/SettingsManager';
-import type { GameSettings } from '../settings/GameSettings';
+import type { InputManager } from '../../core/input/input-manager';
+import type { Scene } from '../../core/scenes/scene';
+import type { SettingsManager } from '../../core/settings/settings-manager';
+import type { GameSettings } from '../settings/game-settings';
 
 export interface InputTestSceneOptions {
   input: InputManager;

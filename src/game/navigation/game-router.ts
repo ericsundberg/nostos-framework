@@ -1,12 +1,16 @@
-import { loadGameContent } from '../content/loadGameContent';
-import { GameplayScene } from '../scenes/GameplayScene';
-import { LaunchScene } from '../scenes/LaunchScene';
-import { TitleScene } from '../scenes/TitleScene';
-import type { GameServices } from '../services/GameServices';
+import { loadGameContent } from '../content/load-game-content';
+import { loadLocalization } from '../localization/load-localization';
+import { GameplayScene } from '../scenes/gameplay-scene';
+import { LaunchScene } from '../scenes/launch-scene';
+import { TitleScene } from '../scenes/title-scene';
+import type { GameServices } from '../services/game-services';
 
 const LAUNCH_SCREEN_MINIMUM_MS = 2500;
 
 export class GameRouter {
+  private localizationLoadPromise:
+    Promise<void> | null = null;
+
   private contentLoadPromise:
     Promise<void> | null = null;
 
@@ -16,6 +20,8 @@ export class GameRouter {
   ) {}
 
   public async start(): Promise<void> {
+    await this.loadLocalization();
+
     if (
       this.services.settings.get(
         'showLaunchScreen',
@@ -33,6 +39,10 @@ export class GameRouter {
     (): void => {
       this.services.scenes.show(
         new LaunchScene({
+          localization:
+            this.services
+              .getLocalization(),
+
           minimumMilliseconds:
             LAUNCH_SCREEN_MINIMUM_MS,
 
@@ -115,6 +125,10 @@ export class GameRouter {
           input:
             this.services.input,
 
+          localization:
+            this.services
+              .getLocalization(),
+
           settings:
             this.services.settings,
 
@@ -122,6 +136,30 @@ export class GameRouter {
             this.showTitleScene,
         }),
       );
+    };
+
+  private readonly loadLocalization =
+    async (): Promise<void> => {
+      if (
+        this.localizationLoadPromise !== null
+      ) {
+        await this.localizationLoadPromise;
+        return;
+      }
+
+      this.localizationLoadPromise =
+        loadLocalization({
+          resolveAssetUrl:
+            this.services
+              .resolveAssetUrl,
+        }).then((localizationData) => {
+          this.services
+            .setLocalizationData(
+              localizationData,
+            );
+        });
+
+      await this.localizationLoadPromise;
     };
 
   private readonly loadContent =

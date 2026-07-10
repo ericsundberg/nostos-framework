@@ -5,7 +5,7 @@ import {
   vi,
 } from 'vitest';
 
-import { SettingsManager } from '../../src/core/settings/SettingsManager';
+import { SettingsManager } from '../../src/core/settings/settings-manager';
 
 interface TestSettings {
   enabled: boolean;

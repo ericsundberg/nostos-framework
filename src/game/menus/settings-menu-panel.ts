@@ -3,12 +3,12 @@ import {
   Text,
 } from 'pixi.js';
 
-import type { InputManager } from '../../core/input/InputManager';
-import type { SettingsManager } from '../../core/settings/SettingsManager';
-import type { LocalizationService } from '../localization/LocalizationService';
-import type { GameSettings } from '../settings/GameSettings';
-import type { MenuPanel } from './MenuPanel';
-import { MenuButton } from './MenuButton';
+import type { InputManager } from '../../core/input/input-manager';
+import type { SettingsManager } from '../../core/settings/settings-manager';
+import type { LocalizationService } from '../localization/localization-service';
+import type { GameSettings } from '../settings/game-settings';
+import type { MenuPanel } from './menu-panel';
+import { MenuButton } from './menu-button';
 
 export interface SettingsMenuPanelOptions {
   input: InputManager;

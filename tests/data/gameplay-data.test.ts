@@ -7,7 +7,7 @@ import {
 import {
   isGameplayData,
   type GameplayData,
-} from '../../src/game/data/GameplayData';
+} from '../../src/game/data/gameplay-data';
 
 const validGameplayData:
   GameplayData = {
@@ -28,8 +28,8 @@ const validGameplayData:
     },
 
     text: {
-      instructions:
-        'Move with WASD.',
+      instructionsKey:
+        'gameplay_instructions',
     },
   };
 
@@ -73,7 +73,7 @@ describe('GameplayData', () => {
           ...validGameplayData,
 
           text: {
-            instructions: '',
+            instructionsKey: '',
           },
         }),
       ).toBe(false);
