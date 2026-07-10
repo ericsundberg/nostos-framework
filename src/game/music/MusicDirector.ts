@@ -56,24 +56,25 @@ export class MusicDirector {
     this.playCurrentTrack();
   }
 
-  public nextTrack(): void {
-    const playlist =
-      this.getCurrentPlaylist();
+  public readonly nextTrack =
+    (): void => {
+      const playlist =
+        this.getCurrentPlaylist();
 
-    if (
-      playlist === null ||
-      playlist.length === 0
-    ) {
-      return;
-    }
+      if (
+        playlist === null ||
+        playlist.length === 0
+      ) {
+        return;
+      }
 
-    this.currentTrackIndex =
-      (
-        this.currentTrackIndex + 1
-      ) % playlist.length;
+      this.currentTrackIndex =
+        (
+          this.currentTrackIndex + 1
+        ) % playlist.length;
 
-    this.playCurrentTrack();
-  }
+      this.playCurrentTrack();
+    };
 
   public stop(): void {
     this.currentRuleId = null;
