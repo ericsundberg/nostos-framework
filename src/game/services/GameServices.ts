@@ -9,9 +9,11 @@ import type { SettingsManager } from '../../core/settings/SettingsManager';
 import type { GameplayData } from '../data/GameplayData';
 import type { TitleScreenData } from '../data/TitleScreenData';
 import type { GameSettings } from '../settings/GameSettings';
+import type { MusicService } from './MusicService';
 
 export interface GameAssets {
   markerTexture: Texture;
+  mainMenuMusicUrl: string;
 }
 
 export interface GameData {
@@ -24,6 +26,7 @@ export interface GameServicesOptions {
   host: HTMLElement;
   settings:
     SettingsManager<GameSettings>;
+  music: MusicService;
   assets: GameAssets;
   data: GameData;
 }
@@ -39,6 +42,9 @@ export class GameServices {
 
   public readonly settings:
     SettingsManager<GameSettings>;
+    
+  public readonly music:
+    MusicService;
 
   public readonly assets:
     GameAssets;
@@ -53,6 +59,7 @@ export class GameServices {
   ) {
     this.app = options.app;
     this.settings = options.settings;
+    this.music = options.music;
     this.assets = options.assets;
     this.data = options.data;
 
@@ -74,6 +81,7 @@ export class GameServices {
 
     this.isDestroyed = true;
 
+    this.music.destroy();
     this.scenes.destroy();
     this.input.destroy();
 

@@ -8,6 +8,7 @@ import { initializeAssetBundles } from '../../core/assets/initializeAssetBundles
 import { loadAssetManifest } from '../../core/assets/loadAssetManifest';
 import { loadJsonAsset } from '../../core/data/loadJsonAsset';
 import { SettingsManager } from '../../core/settings/SettingsManager';
+import { MusicService } from './MusicService';
 import {
   isGameplayData,
   type GameplayData,
@@ -31,6 +32,11 @@ export const createGameServices =
     ): string =>
       window.gamePlatform.assets.url(
         relativePath,
+      );
+      
+    const mainMenuMusicUrl =
+      resolveAssetUrl(
+        'audio/music/main-menu.ogg',
       );
 
     const settings =
@@ -131,21 +137,23 @@ export const createGameServices =
         antialias: true,
       });
 
-    const services =
-      new GameServices({
-        app,
-        host,
-        settings,
+  const services =
+    new GameServices({
+      app,
+      host,
+      settings,
+      music: new MusicService(),
 
-        assets: {
-          markerTexture,
-        },
+      assets: {
+        markerTexture,
+        mainMenuMusicUrl,
+      },
 
-        data: {
-          gameplay,
-          titleScreen,
-        },
-      });
+      data: {
+        gameplay,
+        titleScreen,
+      },
+    });
 
     services.input.bindAction(
       'ui.confirm',

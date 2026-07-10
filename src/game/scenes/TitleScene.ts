@@ -10,9 +10,12 @@ import type { Scene } from '../../core/scenes/Scene';
 import type { SettingsManager } from '../../core/settings/SettingsManager';
 import type { TitleScreenData } from '../data/TitleScreenData';
 import type { GameSettings } from '../settings/GameSettings';
+import type { MusicService } from '../services/MusicService';
 
 export interface TitleSceneOptions {
   markerTexture: Texture;
+  mainMenuMusicUrl: string;
+  music: MusicService;
   data: TitleScreenData;
   input: InputManager;
   settings: SettingsManager<GameSettings>;
@@ -113,11 +116,17 @@ export class TitleScene implements Scene {
   }
 
   public enter(): void {
-    this.unsubscribeConfirm =
-      this.options.input.onPressed(
-        'ui.confirm',
-        this.options.onContinue,
-      );
+  this.unsubscribeConfirm =
+    this.options.input.onPressed(
+      'ui.confirm',
+      () => {
+        this.options.music.playLoop(
+    this.options.mainMenuMusicUrl,
+        );
+
+        this.options.onContinue();
+      },
+    );
 
     this.unsubscribeSettings =
       this.options.settings.subscribe(

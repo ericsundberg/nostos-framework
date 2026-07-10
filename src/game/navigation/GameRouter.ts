@@ -15,24 +15,31 @@ export class GameRouter {
   private readonly showTitleScene =
     (): void => {
       this.services.scenes.show(
-        new TitleScene({
-          markerTexture:
-            this.services.assets
-              .markerTexture,
+  new TitleScene({
+    markerTexture:
+      this.services.assets
+        .markerTexture,
 
-          data:
-            this.services.data
-              .titleScreen,
+    mainMenuMusicUrl:
+      this.services.assets
+        .mainMenuMusicUrl,
 
-          input:
-            this.services.input,
+    music:
+      this.services.music,
 
-          settings:
-            this.services.settings,
+    data:
+      this.services.data
+        .titleScreen,
 
-          onContinue:
-            this.showGameplayScene,
-        }),
+    input:
+      this.services.input,
+
+    settings:
+      this.services.settings,
+
+    onContinue:
+      this.showGameplayScene,
+  }),
       );
     };
 
