@@ -8,6 +8,7 @@ import {
 import type { InputManager } from '../../core/input/input-manager';
 import type { Scene } from '../../core/scenes/scene';
 import type { SettingsManager } from '../../core/settings/settings-manager';
+import { GAME_BUILD_VERSION } from '../build-version';
 import type { TitleScreenData } from '../data/title-screen-data';
 import type { LocalizationService } from '../localization/localization-service';
 import { LoadGamePanel } from '../menus/load-game-panel';
@@ -15,6 +16,8 @@ import { MainMenuPanel } from '../menus/main-menu-panel';
 import type { MenuPanel } from '../menus/menu-panel';
 import { SettingsMenuPanel } from '../menus/settings-menu-panel';
 import type { GameSettings } from '../settings/game-settings';
+
+const VERSION_TEXT_PADDING = 16;
 
 export interface TitleSceneOptions {
   markerTexture: Texture;
@@ -35,10 +38,15 @@ export class TitleScene implements Scene {
   private readonly content =
     new Container();
 
+  private readonly overlay =
+    new Container();
+
   private readonly menuHost =
     new Container();
 
   private readonly marker: Sprite;
+
+  private readonly versionText: Text;
 
   private activePanel:
     MenuPanel | null = null;
@@ -97,6 +105,23 @@ export class TitleScene implements Scene {
       data.layout.titleY,
     );
 
+    this.versionText = new Text({
+      text: `v${GAME_BUILD_VERSION}`,
+
+      style: {
+        align: 'right',
+        fill: '#6f7785',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: 13,
+        fontWeight: 'bold',
+      },
+    });
+
+    this.versionText.anchor.set(
+      1,
+      1,
+    );
+
     this.menuHost.position.set(
       0,
       data.layout.promptY + 42,
@@ -112,7 +137,15 @@ export class TitleScene implements Scene {
       this.menuHost,
     );
 
+    this.overlay.addChild(
+      this.versionText,
+    );
+
     this.view.addChild(this.content);
+
+    this.view.addChild(
+      this.overlay,
+    );
   }
 
   public enter(): void {
@@ -142,6 +175,11 @@ export class TitleScene implements Scene {
     this.content.position.set(
       width / 2,
       height / 2,
+    );
+
+    this.versionText.position.set(
+      width - VERSION_TEXT_PADDING,
+      height - VERSION_TEXT_PADDING,
     );
 
     this.activePanel?.resize?.(

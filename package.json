@@ -1,7 +1,7 @@
 {
   "name": "nostos-framework",
   "productName": "not-what-it-seems",
-  "version": "0.0.20-prealpha",
+  "version": "4.8.0",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "private": true,
