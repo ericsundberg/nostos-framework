@@ -10,6 +10,13 @@ import type { GameSettings } from '../settings/game-settings';
 import type { MenuPanel } from './menu-panel';
 import { MenuButton } from './menu-button';
 
+type GameplayBooleanSetting =
+  keyof Pick<
+    GameSettings['gameplay'],
+    | 'showLaunchScreen'
+    | 'showPipelineMarker'
+  >;
+
 export interface SettingsMenuPanelOptions {
   input: InputManager;
   localization: LocalizationService;
@@ -81,7 +88,7 @@ export class SettingsMenuPanel implements MenuPanel {
         id: 'pipeline_marker',
         label: '',
         onActivate: () => {
-          void this.toggleSetting(
+          void this.toggleGameplaySetting(
             'showPipelineMarker',
           );
         },
@@ -92,7 +99,7 @@ export class SettingsMenuPanel implements MenuPanel {
         id: 'launch_screen',
         label: '',
         onActivate: () => {
-          void this.toggleSetting(
+          void this.toggleGameplaySetting(
             'showLaunchScreen',
           );
         },
@@ -273,7 +280,8 @@ export class SettingsMenuPanel implements MenuPanel {
         'pipeline_marker',
       )}: ${
         this.options.localization.text(
-          settings.showPipelineMarker
+          settings.gameplay
+            .showPipelineMarker
             ? 'on'
             : 'off',
         )
@@ -285,7 +293,8 @@ export class SettingsMenuPanel implements MenuPanel {
         'launch_screen',
       )}: ${
         this.options.localization.text(
-          settings.showLaunchScreen
+          settings.gameplay
+            .showLaunchScreen
             ? 'on'
             : 'off',
         )
@@ -293,14 +302,20 @@ export class SettingsMenuPanel implements MenuPanel {
     );
   }
 
-  private async toggleSetting(
-    key: keyof GameSettings,
+  private async toggleGameplaySetting(
+    key: GameplayBooleanSetting,
   ): Promise<void> {
     try {
       await this.options.settings.update(
         (current) => ({
           ...current,
-          [key]: !current[key],
+
+          gameplay: {
+            ...current.gameplay,
+
+            [key]:
+              !current.gameplay[key],
+          },
         }),
       );
     } catch (error: unknown) {

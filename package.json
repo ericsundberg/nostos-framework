@@ -1,7 +1,7 @@
 {
   "name": "nostos-framework",
   "productName": "Nostos Framework",
-  "version": "0.0.21-prealpha",
+  "version": "0.0.22-prealpha",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "private": true,
@@ -12,11 +12,12 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "validate:assets": "node scripts/validate-game-assets.mjs",
-    "prestart": "npm run validate:assets",
+    "validate:config": "node scripts/validate-config.mjs",
+    "prestart": "npm run validate:assets && npm run validate:config",
     "prepackage": "npm run check",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run lint && npm test && npm run validate:assets"
+    "check": "npm run lint && npm test && npm run validate:assets && npm run validate:config"
   },
   "keywords": [],
   "author": "eric",

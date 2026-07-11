@@ -8,6 +8,9 @@ import type { GamePlatform } from '../shared/platform';
 const ASSET_BASE_URL =
   'game-asset://assets/';
 
+const LOAD_CONFIG_CHANNEL =
+  'config:load';
+
 const LOAD_SETTINGS_CHANNEL =
   'settings:load';
 
@@ -57,6 +60,16 @@ const createAssetUrl = (
 const gamePlatform: GamePlatform = {
   assets: {
     url: createAssetUrl,
+  },
+
+  config: {
+    load: (
+      filename: string,
+    ): Promise<unknown> =>
+      ipcRenderer.invoke(
+        LOAD_CONFIG_CHANNEL,
+        filename,
+      ),
   },
 
   settings: {

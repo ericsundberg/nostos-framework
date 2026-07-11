@@ -75,26 +75,60 @@ describe(
     it(
       'normalizes valid and invalid settings',
       () => {
-        expect(
+        const migratedSettings =
           normalizeGameSettings({
             showPipelineMarker: false,
             showLaunchScreen: false,
-          }),
+          });
+
+        expect(
+          migratedSettings.gameplay,
         ).toEqual({
+          ...DEFAULT_GAME_SETTINGS
+            .gameplay,
+
           showPipelineMarker: false,
           showLaunchScreen: false,
         });
 
         expect(
+          migratedSettings.graphics
+            .fpsLimit,
+        ).toBe(0);
+
+        expect(
+          migratedSettings.graphics
+            .backgroundFpsLimit,
+        ).toBe(30);
+
+        expect(
+          migratedSettings.controls
+            .inputBindings[
+              'ui.confirm'
+            ],
+        ).toEqual([
+          'Enter',
+          'Space',
+        ]);
+
+        const partialLegacySettings =
           normalizeGameSettings({
             showPipelineMarker: false,
-          }),
-        ).toEqual({
-          showPipelineMarker: false,
-          showLaunchScreen:
-            DEFAULT_GAME_SETTINGS
-              .showLaunchScreen,
-        });
+          });
+
+        expect(
+          partialLegacySettings.gameplay
+            .showPipelineMarker,
+        ).toBe(false);
+
+        expect(
+          partialLegacySettings.gameplay
+            .showLaunchScreen,
+        ).toBe(
+          DEFAULT_GAME_SETTINGS
+            .gameplay
+            .showLaunchScreen,
+        );
 
         expect(
           normalizeGameSettings(null),

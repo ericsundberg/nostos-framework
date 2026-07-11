@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "defaults": {
+    "gameplay": {
+      "showLaunchScreen": true,
+      "showPipelineMarker": true,
+      "pauseWhenUnfocused": false,
+      "confirmBeforeQuit": true
+    },
+    "controls": {
+      "inputBindings": {
+        "ui.confirm": ["Enter", "Space"],
+        "ui.back": ["Escape"],
+        "settings.toggleMarker": ["KeyM"],
+        "movement.left": ["KeyA", "ArrowLeft"],
+        "movement.right": ["KeyD", "ArrowRight"],
+        "movement.up": ["KeyW", "ArrowUp"],
+        "movement.down": ["KeyS", "ArrowDown"]
+      }
+    },
+    "display": {
+      "windowMode": "windowed",
+      "resolution": "auto",
+      "displayId": "primary",
+      "rememberWindowPosition": true
+    },
+    "graphics": {
+      "fpsLimit": 0,
+      "backgroundFpsLimit": 30,
+      "renderScale": "auto",
+      "antialias": true,
+      "roundPixels": false,
+      "powerPreference": "default"
+    },
+    "audio": {
+      "masterVolume": 1,
+      "musicVolume": 0.7,
+      "sfxVolume": 0.8,
+      "uiVolume": 0.8,
+      "muteAll": false,
+      "muteWhenUnfocused": false
+    },
+    "accessibility": {
+      "reducedMotion": false,
+      "screenShake": true,
+      "flashingEffects": true,
+      "highContrast": false,
+      "largeText": false,
+      "textScale": 1,
+      "colorblindMode": "off"
+    }
+  },
+  "options": {
+    "graphics": {
+      "fpsLimit": [0, 30, 60, 90, 120, 144, 165, 240],
+      "backgroundFpsLimit": [1, 5, 10, 15, 30]
+    },
+    "display": {
+      "windowMode": ["windowed", "fullscreen", "borderless"],
+      "resolution": ["auto", "1280x720", "1600x900", "1920x1080", "2560x1440"]
+    }
+  }
+}

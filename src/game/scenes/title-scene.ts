@@ -153,7 +153,7 @@ export class TitleScene implements Scene {
       this.options.settings.subscribe(
         (settings) => {
           this.marker.visible =
-            settings
+            settings.gameplay
               .showPipelineMarker;
         },
       );

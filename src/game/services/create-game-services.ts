@@ -1,11 +1,30 @@
+import type { InputManager } from '../../core/input/input-manager';
 import { createGameApplication } from '../../core/application/create-game-application';
 import { SettingsManager } from '../../core/settings/settings-manager';
 import {
+  FRAMEWORK_FALLBACK_GAME_SETTINGS,
+  mergeGameSettingsDefaults,
   type GameSettings,
   normalizeGameSettings,
 } from '../settings/game-settings';
+import { loadSettingsConfig } from '../settings/load-settings-config';
 import { GameServices } from './game-services';
 import { MusicService } from './music-service';
+
+const bindInputActions = (
+  input: InputManager,
+  inputBindings: Record<string, string[]>,
+): void => {
+  for (
+    const [action, codes] of
+    Object.entries(inputBindings)
+  ) {
+    input.bindAction(
+      action,
+      codes,
+    );
+  }
+};
 
 export const createGameServices =
   async (
@@ -18,10 +37,24 @@ export const createGameServices =
         relativePath,
       );
 
+    const settingsConfig =
+      await loadSettingsConfig();
+
+    const defaultSettings =
+      settingsConfig === null
+        ? FRAMEWORK_FALLBACK_GAME_SETTINGS
+        : mergeGameSettingsDefaults(
+          FRAMEWORK_FALLBACK_GAME_SETTINGS,
+          settingsConfig.defaults,
+        );
+
     const settings =
       new SettingsManager<GameSettings>({
-        normalize:
-          normalizeGameSettings,
+        normalize: (value) =>
+          normalizeGameSettings(
+            value,
+            defaultSettings,
+          ),
 
         storage: {
           load: () =>
@@ -42,11 +75,16 @@ export const createGameServices =
       'Loaded persistent game settings.',
     );
 
+    const currentSettings =
+      settings.getAll();
+
     const app =
       await createGameApplication({
         background: '#111318',
         resizeTo: window,
-        antialias: true,
+        antialias:
+          currentSettings.graphics
+            .antialias,
       });
 
     const services =
@@ -60,39 +98,10 @@ export const createGameServices =
           window.gamePlatform.app.quit(),
       });
 
-    services.input.bindAction(
-      'ui.confirm',
-      ['Enter', 'Space'],
-    );
-
-    services.input.bindAction(
-      'ui.back',
-      ['Escape'],
-    );
-
-    services.input.bindAction(
-      'settings.toggleMarker',
-      ['KeyM'],
-    );
-
-    services.input.bindAction(
-      'movement.left',
-      ['KeyA', 'ArrowLeft'],
-    );
-
-    services.input.bindAction(
-      'movement.right',
-      ['KeyD', 'ArrowRight'],
-    );
-
-    services.input.bindAction(
-      'movement.up',
-      ['KeyW', 'ArrowUp'],
-    );
-
-    services.input.bindAction(
-      'movement.down',
-      ['KeyS', 'ArrowDown'],
+    bindInputActions(
+      services.input,
+      currentSettings.controls
+        .inputBindings,
     );
 
     return services;

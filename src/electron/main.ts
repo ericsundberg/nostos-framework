@@ -10,6 +10,7 @@ import {
   registerAssetProtocol,
   registerAssetScheme,
 } from './assets';
+import { registerConfigIpc } from './config';
 import { registerSettingsIpc } from './settings';
 
 const QUIT_APP_CHANNEL =
@@ -74,6 +75,7 @@ const createWindow = (): void => {
 
 void app.whenReady().then(() => {
   registerAssetProtocol();
+  registerConfigIpc();
   registerSettingsIpc();
   registerAppIpc();
   createWindow();

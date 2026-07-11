@@ -193,7 +193,7 @@ export class GameplayScene implements Scene {
       this.options.settings.subscribe(
         (settings) => {
           this.updateStatus(
-            settings
+            settings.gameplay
               .showPipelineMarker,
           );
         },
@@ -319,9 +319,13 @@ export class GameplayScene implements Scene {
         (current) => ({
           ...current,
 
-          showPipelineMarker:
-            !current
-              .showPipelineMarker,
+          gameplay: {
+            ...current.gameplay,
+
+            showPipelineMarker:
+              !current.gameplay
+                .showPipelineMarker,
+          },
         }),
       );
     } catch (error: unknown) {

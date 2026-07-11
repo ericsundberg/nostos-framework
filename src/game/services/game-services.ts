@@ -8,6 +8,7 @@ import type { LocalizationData } from '../localization/localization-data';
 import { LocalizationService } from '../localization/localization-service';
 import { MusicDirector } from '../music/music-director';
 import type { GameSettings } from '../settings/game-settings';
+import { FrameRateService } from './frame-rate-service';
 import type { MusicService } from './music-service';
 
 export interface GameServicesOptions {
@@ -36,6 +37,9 @@ export class GameServices {
 
   public readonly music:
     MusicService;
+
+  public readonly frameRate:
+    FrameRateService;
 
   public readonly resolveAssetUrl:
     (relativePath: string) => string;
@@ -73,6 +77,12 @@ export class GameServices {
 
     this.scenes =
       new SceneManager(this.app);
+
+    this.frameRate =
+      new FrameRateService({
+        app: this.app,
+        settings: this.settings,
+      });
   }
 
   public setLocalizationData(
@@ -142,6 +152,7 @@ export class GameServices {
     this.isDestroyed = true;
 
     this.musicDirector?.stop();
+    this.frameRate.destroy();
     this.music.destroy();
     this.scenes.destroy();
     this.input.destroy();

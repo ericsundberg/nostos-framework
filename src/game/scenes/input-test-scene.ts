@@ -112,7 +112,7 @@ export class InputTestScene implements Scene {
       this.options.settings.subscribe(
         (settings) => {
           this.updateStatus(
-            settings
+            settings.gameplay
               .showPipelineMarker,
           );
         },
@@ -155,9 +155,13 @@ export class InputTestScene implements Scene {
         (current) => ({
           ...current,
 
-          showPipelineMarker:
-            !current
-              .showPipelineMarker,
+          gameplay: {
+            ...current.gameplay,
+
+            showPipelineMarker:
+              !current.gameplay
+                .showPipelineMarker,
+          },
         }),
       );
     } catch (error: unknown) {

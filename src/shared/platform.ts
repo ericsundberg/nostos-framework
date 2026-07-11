@@ -3,6 +3,12 @@ export interface GamePlatform {
     url: (relativePath: string) => string;
   };
 
+  config: {
+    load: (
+      filename: string,
+    ) => Promise<unknown>;
+  };
+
   settings: {
     load: () => Promise<unknown>;
 

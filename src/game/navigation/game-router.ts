@@ -23,9 +23,8 @@ export class GameRouter {
     await this.loadLocalization();
 
     if (
-      this.services.settings.get(
-        'showLaunchScreen',
-      )
+      this.services.settings.getAll()
+        .gameplay.showLaunchScreen
     ) {
       this.showLaunchScene();
       return;
