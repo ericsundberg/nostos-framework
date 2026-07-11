@@ -85,6 +85,10 @@ export class GameRouter {
           settings:
             this.services.settings,
 
+          settingsOptions:
+            this.services
+              .settingsOptions,
+
           canContinue:
             false,
 

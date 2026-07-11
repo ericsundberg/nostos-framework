@@ -92,6 +92,8 @@ export const createGameServices =
         app,
         host,
         settings,
+        settingsOptions:
+          settingsConfig?.options ?? {},
         music: new MusicService(),
         resolveAssetUrl,
         quitApp: () =>

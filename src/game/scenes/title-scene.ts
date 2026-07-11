@@ -16,6 +16,7 @@ import { MainMenuPanel } from '../menus/main-menu-panel';
 import type { MenuPanel } from '../menus/menu-panel';
 import { SettingsMenuPanel } from '../menus/settings-menu-panel';
 import type { GameSettings } from '../settings/game-settings';
+import type { SettingsConfigOptions } from '../settings/settings-config';
 
 const VERSION_TEXT_PADDING = 16;
 
@@ -25,6 +26,7 @@ export interface TitleSceneOptions {
   input: InputManager;
   localization: LocalizationService;
   settings: SettingsManager<GameSettings>;
+  settingsOptions: SettingsConfigOptions;
   canContinue: boolean;
   onNewGame: () => void;
   onContinueGame: () => void;
@@ -255,6 +257,10 @@ export class TitleScene implements Scene {
 
           settings:
             this.options.settings,
+
+          settingsOptions:
+            this.options
+              .settingsOptions,
 
           onBack:
             this.showMainMenu,

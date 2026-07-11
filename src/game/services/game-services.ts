@@ -8,6 +8,7 @@ import type { LocalizationData } from '../localization/localization-data';
 import { LocalizationService } from '../localization/localization-service';
 import { MusicDirector } from '../music/music-director';
 import type { GameSettings } from '../settings/game-settings';
+import type { SettingsConfigOptions } from '../settings/settings-config';
 import { FrameRateService } from './frame-rate-service';
 import type { MusicService } from './music-service';
 
@@ -16,6 +17,7 @@ export interface GameServicesOptions {
   host: HTMLElement;
   settings:
     SettingsManager<GameSettings>;
+  settingsOptions?: SettingsConfigOptions;
   music: MusicService;
   resolveAssetUrl: (
     relativePath: string,
@@ -34,6 +36,9 @@ export class GameServices {
 
   public readonly settings:
     SettingsManager<GameSettings>;
+
+  public readonly settingsOptions:
+    SettingsConfigOptions;
 
   public readonly music:
     MusicService;
@@ -63,6 +68,8 @@ export class GameServices {
   ) {
     this.app = options.app;
     this.settings = options.settings;
+    this.settingsOptions =
+      options.settingsOptions ?? {};
     this.music = options.music;
     this.resolveAssetUrl =
       options.resolveAssetUrl;
