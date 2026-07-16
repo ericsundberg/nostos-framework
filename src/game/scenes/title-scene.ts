@@ -19,8 +19,6 @@ import type { GameSettings } from '../settings/game-settings';
 import type { SettingsConfigOptions } from '../settings/settings-config';
 
 const VERSION_TEXT_PADDING = 16;
-const MENU_Y_OFFSET_FROM_PROMPT = 42;
-
 export interface TitleSceneOptions {
   markerTexture: Texture;
   data: TitleScreenData;
