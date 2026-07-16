@@ -2,7 +2,7 @@
   "name": "nostos-framework",
   "productName": "Nostos Framework",
   "version": "0.0.23-prealpha",
-  "description": "My Electron application description",
+  "description": "A forkable Electron and PixiJS framework for tabletop-style, RPG-inspired, and narrative games.",
   "main": ".vite/build/main.js",
   "private": true,
   "scripts": {
