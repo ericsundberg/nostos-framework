@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - dev/agent-autonomous-review
 
   pull_request:
     branches:
       - main
+      - dev/agent-autonomous-review
 
   workflow_dispatch:
 
