@@ -194,18 +194,31 @@ export class MainMenuPanel implements MenuPanel {
     const visibleItems =
       this.getVisibleItems();
 
+    const buttonSpacing = 62;
+
+    const buttonStackHeight =
+      Math.max(
+        0,
+        (visibleItems.length - 1) *
+          buttonSpacing,
+      );
+
+    const firstButtonY =
+      -buttonStackHeight / 2;
+
     visibleItems.forEach(
       (item, index) => {
         item.button.view.position.set(
           0,
-          index * 62,
+          firstButtonY +
+            index * buttonSpacing,
         );
       },
     );
 
     this.descriptionText.position.set(
       0,
-      visibleItems.length * 62 + 30,
+      buttonStackHeight / 2 + 76,
     );
   }
 

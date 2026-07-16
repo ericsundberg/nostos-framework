@@ -58,7 +58,7 @@ export class StartupScreen {
       'startup-screen__label';
 
     label.textContent =
-      'Not What It Seems';
+      'Nostos Framework';
 
     this.heading =
       document.createElement('h1');

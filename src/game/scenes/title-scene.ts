@@ -19,7 +19,6 @@ import type { GameSettings } from '../settings/game-settings';
 import type { SettingsConfigOptions } from '../settings/settings-config';
 
 const VERSION_TEXT_PADDING = 16;
-
 export interface TitleSceneOptions {
   markerTexture: Texture;
   data: TitleScreenData;
@@ -124,11 +123,6 @@ export class TitleScene implements Scene {
       1,
     );
 
-    this.menuHost.position.set(
-      0,
-      data.layout.promptY + 42,
-    );
-
     this.content.addChild(
       this.marker,
     );
@@ -174,9 +168,9 @@ export class TitleScene implements Scene {
     width: number,
     height: number,
   ): void {
-    this.content.position.set(
-      width / 2,
-      height / 2,
+    this.layoutContent(
+      width,
+      height,
     );
 
     this.versionText.position.set(
@@ -196,6 +190,21 @@ export class TitleScene implements Scene {
     this.view.destroy({
       children: true,
     });
+  }
+
+  private layoutContent(
+    width: number,
+    height: number,
+  ): void {
+    this.content.position.set(
+      width / 2,
+      height / 2,
+    );
+
+    this.menuHost.position.set(
+      0,
+      this.options.data.layout.promptY,
+    );
   }
 
   private readonly showMainMenu =
