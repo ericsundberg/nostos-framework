@@ -4,6 +4,8 @@ import {
   Text,
 } from 'pixi.js';
 
+import { MENU_BUTTON_STYLE } from '../ui/theme';
+
 export interface MenuButtonOptions {
   id: string;
   label: string;
@@ -24,7 +26,11 @@ export class MenuButton {
 
   private isSelected = false;
 
-  private isEnabled: boolean;
+  private isHovered = false;
+
+  private isPressed = false;
+
+  private readonly isEnabled: boolean;
 
   public constructor(
     private readonly options:
@@ -47,12 +53,14 @@ export class MenuButton {
         style: {
           align: 'center',
           fill: this.isEnabled
-            ? '#f5f5f5'
-            : '#6f7785',
+            ? MENU_BUTTON_STYLE.text.enabled
+            : MENU_BUTTON_STYLE.text.disabled,
           fontFamily:
-            'Arial, sans-serif',
-          fontSize: 24,
-          fontWeight: 'bold',
+            MENU_BUTTON_STYLE.font.family,
+          fontSize:
+            MENU_BUTTON_STYLE.font.size,
+          fontWeight:
+            MENU_BUTTON_STYLE.font.weight,
         },
       });
 
@@ -79,6 +87,31 @@ export class MenuButton {
     this.view.on(
       'pointertap',
       this.handlePointerTap,
+    );
+
+    this.view.on(
+      'pointerover',
+      this.handlePointerOver,
+    );
+
+    this.view.on(
+      'pointerout',
+      this.handlePointerOut,
+    );
+
+    this.view.on(
+      'pointerdown',
+      this.handlePointerDown,
+    );
+
+    this.view.on(
+      'pointerup',
+      this.handlePointerUp,
+    );
+
+    this.view.on(
+      'pointerupoutside',
+      this.handlePointerUp,
     );
 
     this.draw();
@@ -111,6 +144,31 @@ export class MenuButton {
       this.handlePointerTap,
     );
 
+    this.view.off(
+      'pointerover',
+      this.handlePointerOver,
+    );
+
+    this.view.off(
+      'pointerout',
+      this.handlePointerOut,
+    );
+
+    this.view.off(
+      'pointerdown',
+      this.handlePointerDown,
+    );
+
+    this.view.off(
+      'pointerup',
+      this.handlePointerUp,
+    );
+
+    this.view.off(
+      'pointerupoutside',
+      this.handlePointerUp,
+    );
+
     this.view.destroy({
       children: true,
     });
@@ -121,27 +179,93 @@ export class MenuButton {
       this.activate();
     };
 
+  private readonly handlePointerOver =
+    (): void => {
+      if (!this.isEnabled) {
+        return;
+      }
+
+      this.isHovered = true;
+      this.draw();
+    };
+
+  private readonly handlePointerOut =
+    (): void => {
+      this.isHovered = false;
+      this.isPressed = false;
+      this.draw();
+    };
+
+  private readonly handlePointerDown =
+    (): void => {
+      if (!this.isEnabled) {
+        return;
+      }
+
+      this.isPressed = true;
+      this.draw();
+    };
+
+  private readonly handlePointerUp =
+    (): void => {
+      this.isPressed = false;
+      this.draw();
+    };
+
+  private getBackgroundColor(): string {
+    if (!this.isEnabled) {
+      return MENU_BUTTON_STYLE.background.disabled;
+    }
+
+    if (this.isSelected) {
+      return MENU_BUTTON_STYLE.background.selected;
+    }
+
+    if (this.isPressed) {
+      return MENU_BUTTON_STYLE.background.pressed;
+    }
+
+    if (this.isHovered) {
+      return MENU_BUTTON_STYLE.background.hover;
+    }
+
+    return MENU_BUTTON_STYLE.background.default;
+  }
+
+  private getBorderColor(): string {
+    if (!this.isEnabled) {
+      return MENU_BUTTON_STYLE.border.disabled;
+    }
+
+    if (this.isSelected) {
+      return MENU_BUTTON_STYLE.border.selected;
+    }
+
+    if (this.isHovered || this.isPressed) {
+      return MENU_BUTTON_STYLE.border.hover;
+    }
+
+    return MENU_BUTTON_STYLE.border.default;
+  }
+
   private draw(): void {
     this.background.clear();
 
     this.background
       .roundRect(
-        -150,
-        -24,
-        300,
-        48,
-        8,
+        -MENU_BUTTON_STYLE.width / 2,
+        -MENU_BUTTON_STYLE.height / 2,
+        MENU_BUTTON_STYLE.width,
+        MENU_BUTTON_STYLE.height,
+        MENU_BUTTON_STYLE.radius,
       )
       .fill(
-        this.isSelected
-          ? '#243244'
-          : '#171b22',
+        this.getBackgroundColor(),
       )
       .stroke({
-        color: this.isSelected
-          ? '#8ecae6'
-          : '#394150',
-        width: 2,
+        color: this.getBorderColor(),
+        width:
+          MENU_BUTTON_STYLE.border.width,
       });
   }
 }
