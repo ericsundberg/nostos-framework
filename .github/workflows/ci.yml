@@ -54,21 +54,22 @@ jobs:
 
       - name: Verify packaged application
         run: |
-          test -x out/not-what-it-seems-linux-x64/not-what-it-seems
-          test -f out/not-what-it-seems-linux-x64/resources/game-assets/manifest.json
-          test -f out/not-what-it-seems-linux-x64/resources/game-assets/data/title-screen.json
+          test -x "out/Nostos Framework-linux-x64/Nostos Framework"
+          test -f "out/Nostos Framework-linux-x64/resources/game-assets/manifest.json"
+          test -f "out/Nostos Framework-linux-x64/resources/game-assets/data/title-screen.json"
+          test -f "out/Nostos Framework-linux-x64/resources/game-assets/localization/localization-en.json"
 
       - name: Archive Linux package
         run: |
-          tar -czf not-what-it-seems-linux-x64.tar.gz \
+          tar -czf nostos-framework-linux-x64.tar.gz \
             -C out \
-            not-what-it-seems-linux-x64
+            "Nostos Framework-linux-x64"
 
       - name: Upload Linux package
         uses: actions/upload-artifact@v7
         with:
-          name: not-what-it-seems-linux-x64
-          path: not-what-it-seems-linux-x64.tar.gz
+          name: nostos-framework-linux-x64
+          path: nostos-framework-linux-x64.tar.gz
           if-no-files-found: error
           retention-days: 7
           compression-level: 0
