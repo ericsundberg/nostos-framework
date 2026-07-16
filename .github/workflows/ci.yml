@@ -49,6 +49,9 @@ jobs:
       - name: Validate public assets
         run: npm run validate:assets
 
+      - name: Validate public config
+        run: npm run validate:config
+
       - name: Package Linux application
         run: ./node_modules/.bin/electron-forge package
 
